@@ -1,5 +1,7 @@
 project(PCL_Project)
 
+set(CMAKE_BUILD_TYPE "Debug")
+
 #PCL
 find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})

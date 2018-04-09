@@ -13,3 +13,24 @@ CMake Binary=file:///usr/bin/cmake
 Environment Profile=
 Extra Arguments=
 Install Directory=file:///usr/local
+
+[Launch]
+Launch Configurations=Launch Configuration 0
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=PCL_Debug
+Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
+Dependency Action=Nothing
+EnvironmentGroup=default
+Executable=file:///home/zero/PCL_RGB-D_Object/PCL_Project/bin/PCL_Project
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=PCL_Project,src,PCL_Project
+Use External Terminal=false
+Working Directory=file:///home/zero/PCL_RGB-D_Object/PCL_Project/bin
+isExecutable=true
