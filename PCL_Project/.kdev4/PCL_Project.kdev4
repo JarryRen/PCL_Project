@@ -24,9 +24,9 @@ Name=PCL_Debug
 Type=Native Application
 
 [Launch][Launch Configuration 0][Data]
-Arguments=
+Arguments=cap_1_4_final.pcd
 Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
-Dependency Action=Nothing
+Dependency Action=Build
 EnvironmentGroup=default
 Executable=file:///home/zero/PCL_RGB-D_Object/PCL_Project/bin/PCL_Project
 External Terminal=konsole --noclose --workdir %workdir -e %exe

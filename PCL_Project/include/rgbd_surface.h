@@ -5,8 +5,10 @@
 #pragma once
 #include <pcl/point_types.h>
 #include <pcl/search/kdtree.h>
+#include <pcl/features/normal_3d.h>
 #include <pcl/surface/mls.h>
 #include <pcl/surface/poisson.h>
+#include <pcl/surface/gp3.h>
 
 namespace rgbd_pcl{
   class rgbd_surface{
@@ -16,15 +18,19 @@ namespace rgbd_pcl{
      * \param[in] input RGB点云
      * \param[out] output 平滑后RGB点云
      */ 
-    void rgbd_mls(pcl::PointCloud<pcl::PointXYZRGB>::Ptr input,
-		  pcl::PointCloud<pcl::PointXYZRGB>::Ptr output
-    );
+    void mls_surface(pcl::PointCloud<pcl::PointXYZRGB>::Ptr input,pcl::PointCloud<pcl::PointXYZRGB>::Ptr output);
     
     /** \brief 泊松重建
      * 
      */ 
-    void rgbd_poisson();
+    void poisson_reconstruction(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,pcl::PolygonMesh &mesh);
     
+    /** \brief 贪婪三角化
+     * 
+     * 
+     */ 
+    void gp3_reconstruction(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,pcl::PolygonMesh &mesh);
+ 
   private:
     
     
