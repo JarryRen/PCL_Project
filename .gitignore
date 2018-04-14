@@ -1,0 +1,8 @@
+#pcl object temp files
+PCL_Object_Project/bin/*
+PCL_Object_Project/build/*
+
+#pcl scene temp files
+Scene_Project/bin/*
+Scene_Project/build/*
+
