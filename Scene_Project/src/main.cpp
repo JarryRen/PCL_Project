@@ -7,9 +7,9 @@
 #include <pcl_control.h>
 
 int main(int argc, char **argv) {
-    std::cout << "Hello, world!" << std::endl;
+    std::cout << "PCL | Scene" << std::endl;
     
-    scene::load_file(argc,argv);
+    scene::get_opt_string(argc,argv);
     
     return 0;
 }

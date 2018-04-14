@@ -1,6 +1,6 @@
 project(scene_project)
 
-#set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Debug")
 
 #PCL
 find_package(PCL 1.7 REQUIRED)

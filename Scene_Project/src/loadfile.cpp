@@ -1,21 +1,22 @@
-#include <loadfile.h>
+#include "loadfile.h"
 
 void scene::load_image(int argc, char** argv, std::vector< cv::Mat >& png_data)
 {
   std::string  extension(".png");
-  for(int i=1;i<=argc/2;i++){//第一个参数为命令本身
+  //第一个参数为命令本身,最后为选项参数
+  for(int i=1;i<=(argc-1)/2;i++){
     std::string filename=std::string(argv[i]);
     if(filename.size()<=extension.size())
       continue;
     cv::Mat rgb,depth;
     rgb=cv::imread(argv[i]);
-    depth=cv::imread(argv[argc/2+i],-1);//onlyread
+    depth=cv::imread(argv[(argc-1)/2+i],-1);//onlyread
     png_data.push_back(rgb);
     png_data.push_back(depth);
   }
 }
 
-void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< PointCloud >& cloud_data)
+void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
   cv::Mat rgb,depth;
   for(int i=0;i<png_data.size();i+=2)
@@ -23,7 +24,7 @@ void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< PointClo
     rgb = png_data[i];
     depth = png_data[i+1];
 
-    PointCloud::Ptr cloud(new PointCloud);
+    pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>);
     for(int m=0;m<depth.rows;m++)
     {
       for(int n=0;n<depth.cols;n++)
@@ -46,43 +47,47 @@ void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< PointClo
     cloud->height = 1;
     cloud->width = cloud->points.size();
     cloud->is_dense =false;
-    cloud_data.push_back(*cloud);
+    cloud_data.push_back(cloud);
   }
 }
 
-void scene::save_pcd(std::vector< PointCloud >& cloud_data)
+void scene::save_pcd(std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
   std::string  dir="./pcd_data";
   if(access(dir.c_str(),0)==-1)
   {
     std::cerr<<"pcd_data folder not existing!"<<std::endl;
     std::cerr<<"pcd_data make successfully."<<std::endl;
-    mkdir(dir.c_str(),S_IRWXU);//创建文件夹
+    //创建文件夹
+    mkdir(dir.c_str(),S_IRWXU);
   }
   for(int i=0;i<cloud_data.size();i++)
   {
-    PointCloud::Ptr cloud(new PointCloud);
-    *cloud=cloud_data[i];
+    pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>);
+    cloud=cloud_data[i];
     std::stringstream ss;
     ss<<dir<<"/temp_pcd"<< i <<".pcd";
     pcl::io::savePCDFileASCII(ss.str(),*cloud);
     cloud->points.clear();
-    std::cout<<"Point cloud "<< i <<"saved."<<std::endl;
+    std::cout<<"Point cloud "<< i+1 <<"saved."<<std::endl;
   }
 }
 
-void scene::load_pcd(int argc, char** argv, std::vector< scene::PointCloud >& cloud_data)
+void scene::load_pcd(int argc, char** argv, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
+  std::cout<<"Point Cloud loading..."<<std::endl;
   std::string  extension(".pcd");
-  for(int i=1;i<=argc/2;i++){//第一个参数为命令本身
+  for(int i=1;i<argc;i++){
     std::string filename=std::string(argv[i]);
     if(filename.size()<=extension.size())
       continue;
-    if (filename.compare (filename.size () - extension.size (), extension.size (), extension) == 0)//后缀检测是否为.pcd文件
+    //比较，检测后缀是否为.pcd文件
+    if (filename.compare (filename.size () - extension.size (), extension.size (), extension) == 0)
     {
-      PointCloud::Ptr cloud;
+      std::cout<<"Point Cloud "<<argv[i]<<" loaded."<<std::endl;
+      pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>);
       pcl::io::loadPCDFile ( argv[i], *cloud );
-      cloud_data.push_back ( *cloud );
+      cloud_data.push_back ( cloud );
     }
   }
 }
