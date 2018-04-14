@@ -1,9 +1,9 @@
-# PCL | RGB-D Object Reconstruction
+# PCL | Study
 
 ## Environment
 * Ubuntu 14.04
 * PCL 1.7
-* OpenCV 3.4.0
+* OpenCV 2.8
 * CMake 2.8 or later
 * KDevelop 4.13.3
 
