@@ -3,6 +3,9 @@ PCL_Object_Project/bin/*
 PCL_Object_Project/build/*
 
 #pcl scene temp files
-Scene_Project/bin/*
+*.pcd
+*.png
+Scene_Project/bin/scene_project
 Scene_Project/build/*
+Scene_Project/include/3rdParty/rapidjson/*
 

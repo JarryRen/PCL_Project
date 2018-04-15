@@ -4,6 +4,7 @@
 #include <unistd.h>
 //scene
 #include "loadfile.h"
+#include "registration.h"
 #include "reconstruction.h"
 
 namespace scene{
@@ -20,4 +21,5 @@ namespace scene{
   
   void load_file(int argc,char **argv);
   
+  void registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data);
 }

@@ -21,6 +21,7 @@ namespace scene{
      */ 
     void moving_least_sauares(pcl::PointCloud<PointT>::Ptr input,pcl::PointCloud<PointT>::Ptr output);
     
+    
     void poisson(pcl::PointCloud<PointT>::Ptr input,pcl::PolygonMesh &mesh);
     
     /** \brief 贪婪三角投影

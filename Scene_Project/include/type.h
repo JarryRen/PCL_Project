@@ -11,6 +11,4 @@ namespace scene{
   const double camera_cy = 253.5;
   const double camera_fx = 518.0;
   const double camera_fy = 519.0;
-  
-  
 }

@@ -39,7 +39,13 @@ namespace scene{
   /** \brief 导入点云文件
    * \param[in] argc 参数行数
    * \param[in] argv 具体参数
-   * \param[out] cloud_data 取得的未经处理的点云对象的容器
+   * \param[out] cloud_data 取得的未经处理的点云对象指针的容器
    */ 
   void load_pcd(int argc,char **argv,std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data);
+  
+  /** \brief 加载JSON配置文件
+   * 
+   * 
+   */ 
+  void load_config_json();
 }

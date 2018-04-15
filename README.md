@@ -6,6 +6,7 @@
 * OpenCV 2.8
 * CMake 2.8 or later
 * KDevelop 4.13.3
+* RapidJSON
 
 ## Thanks
 RGB-D Object Dataset
