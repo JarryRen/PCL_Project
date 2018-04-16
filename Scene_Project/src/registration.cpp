@@ -17,22 +17,7 @@ scene::registration::registration()
 scene::registration::registration(int flag)
 {
   if (flag == 1){
-    ifstream fin("project_config.json");
-    rapidjson::IStreamWrapper isw(fin);
-    
-    rapidjson::Document document;
-    document.ParseStream(isw);
-    
-    rapidjson::Value &reg = document["registration"]; 
-    leaf_size = reg["leaf_size"].GetDouble();
-    ne_radius = reg["ne_radius"].GetDouble();
-    fpfh_radius = reg["fpfh_radius"].GetDouble();
-    
-    max_distance = reg["max_distance"].GetDouble();
-    max_iterations = reg["max_iterations"].GetInt();
-    trans_epsilon = reg["trans_epsilon"].GetDouble();
-    ef_epsilon = reg["ef_epsilon"].GetDouble();
-    
+    get_config();
   }
 }
 
@@ -134,7 +119,7 @@ void scene::registration::global_registration(std::vector< boost::shared_ptr< pc
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_cloud(new pcl::visualization::PCLVisualizer("3D viewer"));  
     pcl::visualization::PointCloudColorHandlerCustom< PointT > s_p(source_process ,0,255,0);
     viewer_cloud->addPointCloud(source_process,s_p,"cloud_process");
-     viewer_cloud->addPointCloud(source,"cloud");
+     viewer_cloud->addPointCloud(target,"cloud");
     while (!viewer_cloud->wasStopped()){  
 	viewer_cloud->spinOnce(100);  
 	boost::this_thread::sleep(boost::posix_time::microseconds(100000));  
@@ -154,5 +139,23 @@ void scene::registration::global_registration(std::vector< boost::shared_ptr< pc
   }
 }
 
+void scene::registration::get_config()
+{
+    ifstream fin("project_config.json");
+    rapidjson::IStreamWrapper isw(fin);
+    
+    rapidjson::Document document;
+    document.ParseStream(isw);
+    
+    rapidjson::Value &reg = document["registration"]; 
+    leaf_size = reg["leaf_size"].GetDouble();
+    ne_radius = reg["ne_radius"].GetDouble();
+    fpfh_radius = reg["fpfh_radius"].GetDouble();
+    
+    max_distance = reg["max_distance"].GetDouble();
+    max_iterations = reg["max_iterations"].GetInt();
+    trans_epsilon = reg["trans_epsilon"].GetDouble();
+    ef_epsilon = reg["ef_epsilon"].GetDouble();
+}
 
 

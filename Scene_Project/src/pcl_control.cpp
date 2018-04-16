@@ -1,4 +1,4 @@
-#include <pcl_control.h>
+#include "pcl_control.h"
 
 void scene::get_opt_string(int argc, char** argv)
 {
@@ -41,10 +41,13 @@ void scene::load_file(int argc, char** argv)
   scene::save_pcd(cloud_data);
 }
 
-void scene::registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data)
+void scene::registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data)
 {
-    pcl::PointCloud<PointT>::Ptr global_cloud (new pcl::PointCloud<PointT>);
-    scene::registration reg(1);
-//    reg.global_registration(cloud_data,global_cloud);
-//    pcl::io::savePCDFile("global_cloud.pcd",*global_cloud,true);
+  scene::myfilter mf;
+  mf.pcd_filter(cloud_data);
+  
+  pcl::PointCloud<PointT>::Ptr global_cloud (new pcl::PointCloud<PointT>);
+  scene::registration reg(1);
+  reg.global_registration(cloud_data,global_cloud);
+  pcl::io::savePCDFile("global_cloud.pcd",*global_cloud,true);
 }

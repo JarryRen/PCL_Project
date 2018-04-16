@@ -13,15 +13,16 @@
 //rapidjson
 #include "3rdParty/rapidjson/document.h"
 #include "3rdParty/rapidjson/istreamwrapper.h"
-
 //scene
 #include "type.h"
 
 namespace scene{
+  
   class registration{
   public:
     registration();
     registration(int flag);
+    
     /** \brief 全局配准
      * \param[in] cloud_data 点云对象指针容器
      * \param[out] cloud 配准完成的点云对象指针
@@ -38,7 +39,7 @@ namespace scene{
     double trans_epsilon;//TransformationEpsilon
     double ef_epsilon;//EuclideanFitnessEpsilon
     
-    /** \brief 预处理，过滤，提取特征
+    /** \brief sac_预处理，过滤，提取特征
      * \param[in] input 待处理的源点云
      * \param[out] output 处理后点云
      * \param[out] fpfh 快速特征点直方图描述
@@ -63,8 +64,11 @@ namespace scene{
      */ 
     void iterative_closest_point(pcl::PointCloud<PointT>::Ptr source, pcl::PointCloud<PointT>::Ptr target, 
 				 Eigen::Matrix4f &sac_trans,Eigen::Matrix4f &icp_trans);
-  
     
+    /** \brief 取得配置信息，文件为当前目录
+     * \in 文件 project_config.json
+     */ 
+    void get_config();
   };
   
 }

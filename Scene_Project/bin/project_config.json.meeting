@@ -1,10 +1,4 @@
 {
-  "filters":
-  {
-  "leaf_size":0.01,
-  "nr_k":50,
-  "stddev_mult":1
-  },
   "registration":
   {
   "leaf_size":0.07,
