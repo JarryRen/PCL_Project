@@ -4,21 +4,7 @@
 
 scene::registration::registration()
 {
-    leaf_size = 0.07;//5cm
-    ne_radius = 0.5;//法线计算半径
-    fpfh_radius = 0.5;//fpfh特征计算半径
-    
-    max_distance = 0.01;//MaxCorrespondenceDistance
-    max_iterations = 100;//MaximumIterations
-    trans_epsilon = 1e-10;//TransformationEpsilon
-    ef_epsilon = 1;//EuclideanFitnessEpsilon
-}
-
-scene::registration::registration(int flag)
-{
-  if (flag == 1){
-    get_config();
-  }
+  get_config();
 }
 
 void scene::registration::pre_process(pcl::PointCloud< scene::PointT >::Ptr input, pcl::PointCloud< scene::PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
@@ -111,19 +97,9 @@ void scene::registration::global_registration(std::vector< boost::shared_ptr< pc
     
     pcl::PointCloud<PointT>::Ptr source_process(new pcl::PointCloud<PointT>);
     sac_ia(source,target,source_process,sac_trans);
-    
     std::cout<<"处理后源点云:"<<source_process->size()<<" 目标点云:"<<target->size()<<std::endl;
     std::cout<<"------sac_ia 变换矩阵: "<<std::endl;
     std::cout<<sac_trans<<std::endl;
-    
-    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_cloud(new pcl::visualization::PCLVisualizer("3D viewer"));  
-    pcl::visualization::PointCloudColorHandlerCustom< PointT > s_p(source_process ,0,255,0);
-    viewer_cloud->addPointCloud(source_process,s_p,"cloud_process");
-     viewer_cloud->addPointCloud(target,"cloud");
-    while (!viewer_cloud->wasStopped()){  
-	viewer_cloud->spinOnce(100);  
-	boost::this_thread::sleep(boost::posix_time::microseconds(100000));  
-    }
     
     iterative_closest_point(source_process,target,sac_trans,icp_trans);
     std::cout<<"------icp 变换矩阵: "<<std::endl;
@@ -148,7 +124,7 @@ void scene::registration::get_config()
     document.ParseStream(isw);
     
     rapidjson::Value &reg = document["registration"]; 
-    leaf_size = reg["leaf_size"].GetDouble();
+    leaf_size = reg["leaf_size"].GetFloat();
     ne_radius = reg["ne_radius"].GetDouble();
     fpfh_radius = reg["fpfh_radius"].GetDouble();
     

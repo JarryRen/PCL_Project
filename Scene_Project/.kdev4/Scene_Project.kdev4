@@ -32,7 +32,7 @@ Name=Scene
 Type=Native Application
 
 [Launch][Launch Configuration 0][Data]
-Arguments=./pcd_data/temp_pcd1.pcd ./pcd_data/temp_pcd2.pcd \n-pc
+Arguments=-lr cap_2_4_full.pcd
 Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
 Dependency Action=Nothing
 EnvironmentGroup=default

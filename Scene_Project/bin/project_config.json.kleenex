@@ -14,12 +14,5 @@
   "max_iterations":250,
   "trans_epsilon":1e-10,
   "ef_epsilon":1e-10
-  },
-  "reconsruction":
-  {
-  "mls_radius":0.04,
-  "depth":8,
-  "solver_divide":6,
-  "iso_divide":6
   }
 }

@@ -3,7 +3,6 @@
  * 
  */
 #pragma once
-
 //pcl
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/features/normal_3d.h>
@@ -15,19 +14,44 @@
 
 namespace scene{ 
   class reconsruction{
+  public:
+    reconsruction();
+    
+    /** \brief 点云到
+     * \param[in] cloud 输入点云
+     * \param[out] mesh 重建后的网格模型
+     * \param[in] method 使用方法 \1 泊松  \2 三角化
+     */ 
+    void pcd_to_mesh(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method);
+    
+  private:
+    double mls_radius;
+    //poisson
+    int depth;
+    int solver_divide;
+    int iso_divide;
+    
     /** \brief 移动最小二乘 平滑处理
      * \param[in] input RGB点云
      * \param[out] output 平滑后RGB点云
      */ 
     void moving_least_sauares(pcl::PointCloud<PointT>::Ptr input,pcl::PointCloud<PointT>::Ptr output);
     
-    
-    void poisson(pcl::PointCloud<PointT>::Ptr input,pcl::PolygonMesh &mesh);
+    /** \brief 泊松重建
+     * \param[in] cloud 输入点云
+     * \param[out] mesh 重建后的网格模型
+     */ 
+    void poisson(pcl::PointCloud<PointT>::Ptr cloud,pcl::PolygonMesh &mesh);
     
     /** \brief 贪婪三角投影
      * 
      * 
      */ 
-    void greedy_projection_triangulation(pcl::PointCloud<PointT>::Ptr input,pcl::PolygonMesh &mesh);
+    void greedy_projection_triangulation(pcl::PointCloud<PointT>::Ptr cloud,pcl::PolygonMesh &mesh);
+    
+    /** \brief 取得配置信息，文件为当前目录
+     * \in 文件 project_config.json
+     */ 
+    void get_config();
   };
 }

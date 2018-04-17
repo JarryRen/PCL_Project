@@ -3,6 +3,7 @@ PCL_Object_Project/bin/*
 PCL_Object_Project/build/*
 
 #pcl scene temp files
+*.kdev4
 *.pcd
 *.png
 Scene_Project/bin/scene_project

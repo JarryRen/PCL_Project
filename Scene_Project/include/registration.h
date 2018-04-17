@@ -10,9 +10,6 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/registration/ia_ransac.h>
 #include <pcl/registration/icp.h>
-//rapidjson
-#include "3rdParty/rapidjson/document.h"
-#include "3rdParty/rapidjson/istreamwrapper.h"
 //scene
 #include "type.h"
 
@@ -21,7 +18,6 @@ namespace scene{
   class registration{
   public:
     registration();
-    registration(int flag);
     
     /** \brief 全局配准
      * \param[in] cloud_data 点云对象指针容器
@@ -30,7 +26,7 @@ namespace scene{
     void global_registration(std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data,pcl::PointCloud<PointT>::Ptr global_alian_cloud);
   
   private:
-    double leaf_size;
+    float leaf_size;
     double ne_radius;//法线计算半径
     double fpfh_radius;//fpfh特征计算半径
     

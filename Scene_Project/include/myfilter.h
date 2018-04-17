@@ -2,10 +2,6 @@
 //pcl
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
-//rapidjson
-#include "3rdParty/rapidjson/document.h"
-#include "3rdParty/rapidjson/istreamwrapper.h"
-#include <fstream>
 //scene
 #include "type.h"
 
@@ -21,7 +17,7 @@ namespace scene {
     void pcd_filter(std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data);
     
   private:
-    double leaf_size;
+    float leaf_size;
     int nr_k;
     double stddev_mult;
     

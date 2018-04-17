@@ -1,4 +1,5 @@
 #include "myfilter.h"
+#include <boost/graph/graph_concepts.hpp>
 
 scene::myfilter::myfilter()
 {
@@ -7,20 +8,26 @@ scene::myfilter::myfilter()
 
 void scene::myfilter::pcd_filter(std::vector< boost::shared_ptr< pcl::PointCloud< scene::PointT > > >& cloud_data)
 {
-  pcl::PointCloud<PointT>::Ptr cloud;
   for(int i=0; i<cloud_data.size();i++)
   {
-    cloud = cloud_data[i];
+    std::vector<int> indieces;
+    pcl::removeNaNFromPointCloud(*cloud_data[i],*cloud_data[i],indieces);
+  
+    pcl::PointCloud<PointT>::Ptr cloud_grid(new pcl::PointCloud<PointT>);
     pcl::VoxelGrid<PointT> grid;
-    grid.setInputCloud(cloud);
     grid.setLeafSize(leaf_size,leaf_size,leaf_size);
-    grid.filter(*cloud);
-
+    grid.setInputCloud(cloud_data[i]);
+    grid.filter(*cloud_grid);
+    
+    //计算点群方差，超出标准差意外标记离群
+    pcl::PointCloud<PointT>::Ptr cloud_sor(new pcl::PointCloud<PointT>);
     pcl::StatisticalOutlierRemoval<PointT> sor;
-    sor.setInputCloud(cloud);
+    sor.setInputCloud(cloud_grid);
     sor.setMeanK(nr_k);
     sor.setStddevMulThresh(stddev_mult);
-    sor.filter(*cloud);
+    sor.filter(*cloud_sor);
+    
+    *cloud_data[i] = *cloud_sor;
   }
 }
 
@@ -34,7 +41,7 @@ void scene::myfilter::get_config()
     document.ParseStream(isw);
     
     rapidjson::Value &filter = document["filters"]; 
-    leaf_size = filter["leaf_size"].GetDouble();
+    leaf_size = filter["leaf_size"].GetFloat();
     nr_k = filter["nr_k"].GetInt();
     stddev_mult = filter["stddev_mult"].GetDouble();
 }
