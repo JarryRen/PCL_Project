@@ -2,6 +2,7 @@
 
 //test
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/io/vtk_lib_io.h>
 
 void scene::get_opt_string(int argc, char** argv)
 {
@@ -11,6 +12,7 @@ void scene::get_opt_string(int argc, char** argv)
   std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data;
   scene::myfilter mf;
 	
+
   while( ( opt_result = getopt(argc,argv,optString)) != -1 )
   {
     switch(opt_result)
@@ -26,6 +28,7 @@ void scene::get_opt_string(int argc, char** argv)
 	break;
       case 'c':
 	std::cout<<"------ICP逐帧配准."<<std::endl;
+	
 	registration_test(cloud_data);
 	break;
       case 'n':
@@ -36,7 +39,19 @@ void scene::get_opt_string(int argc, char** argv)
 	reconstruction_test(cloud_data[0]);
 	break;
       default:
-	std::cout<<"Error Parameter!"<<std::endl;
+	std::cout<<"Error Parameter! // Test"<<std::endl;
+	
+	pcl::PolygonMesh mesh;
+	pcl::io::loadPolygonFileVTK("test_mesh.vtk",mesh);
+	pcl::visualization::PCLVisualizer viewer("mesh viewer");
+	viewer.setBackgroundColor(128,128,128);
+	viewer.addPolygonMesh(mesh,"mesh");
+	while (!viewer.wasStopped())
+	{
+	    viewer.spinOnce(100);
+	    boost::this_thread::sleep(boost::posix_time::microseconds(100000));
+	}
+   
 	break;
     }
   }
@@ -71,6 +86,7 @@ void scene::reconstruction_test(pcl::PointCloud< scene::PointT >::Ptr cloud)
   pcl::io::saveVTKFile("test_mesh.vtk",mesh);
 
   pcl::visualization::PCLVisualizer viewer("mesh viewer");
+  viewer.setBackgroundColor(127,255,0);
   viewer.addPolygonMesh(mesh,"mesh");
   while (!viewer.wasStopped())
    {

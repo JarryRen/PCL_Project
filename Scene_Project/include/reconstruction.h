@@ -49,6 +49,11 @@ namespace scene{
      */ 
     void greedy_projection_triangulation(pcl::PointCloud<PointT>::Ptr cloud,pcl::PolygonMesh &mesh);
     
+    /** \brief 模型染色
+     * 
+     */ 
+    void mesh_coloring(pcl::PolygonMesh &mesh,pcl::PointCloud<PointT>::Ptr cloud);
+    
     /** \brief 取得配置信息，文件为当前目录
      * \in 文件 project_config.json
      */ 

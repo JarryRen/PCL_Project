@@ -1,7 +1,7 @@
 {
   "filters":
   {
-  "leaf_size":0.001,
+  "leaf_size":0.003,
   "nr_k":20,
   "stddev_mult":1
   },

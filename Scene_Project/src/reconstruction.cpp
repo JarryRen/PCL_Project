@@ -11,6 +11,7 @@ void scene::reconsruction::pcd_to_mesh(pcl::PointCloud< scene::PointT >::Ptr clo
   moving_least_sauares(cloud,cloud_mls);
   if(method == 1){
     poisson(cloud_mls,mesh);
+    mesh_coloring(mesh,cloud);
   }
   if(method == 2){
   }
@@ -38,6 +39,7 @@ void scene::reconsruction::moving_least_sauares(pcl::PointCloud< scene::PointT >
 
 void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
 {
+  /*
   pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
   pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
   tree->setInputCloud(cloud);
@@ -45,6 +47,15 @@ void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, 
   ne.setInputCloud(cloud);
   ne.setSearchMethod(tree);
   ne.setKSearch(30);
+  ne.compute(*cloud_normals);
+  */
+  Eigen::Vector4f centroid;
+  pcl::compute3DCentroid(*cloud,centroid);
+  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
+  pcl::NormalEstimation<PointT,pcl::Normal> ne;
+  ne.setInputCloud(cloud);
+  ne.setRadiusSearch(0.01);
+  ne.setViewPoint(centroid[0],centroid[1],centroid[2]);
   ne.compute(*cloud_normals);
   
   pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointXYZRGBNormal>);
@@ -62,6 +73,46 @@ void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, 
   poisson.setOutputPolygons(false);
   
   poisson.reconstruct(mesh);
+}
+
+void scene::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud< scene::PointT >::Ptr cloud)
+{
+  pcl::PointCloud<PointT> cloud_color_mesh; 
+  pcl::fromPCLPointCloud2(mesh.cloud, cloud_color_mesh); 
+
+  pcl::KdTreeFLANN<pcl::PointXYZRGB> kdtree;
+  kdtree.setInputCloud (cloud);
+  // K 搜索的近邻点数
+  int K = 5;
+  std::vector<int> pointIdxNKNSearch(K);
+  std::vector<float> pointNKNSquaredDistance(K);
+  for(int i=0;i<cloud_color_mesh.points.size();++i)
+  {
+      uint8_t r = 0;
+      uint8_t g = 0;
+      uint8_t b = 0;
+      int red = 0;
+      int green = 0;
+      int blue = 0;
+      
+      if ( kdtree.nearestKSearch (cloud_color_mesh.points[i], K, pointIdxNKNSearch, pointNKNSquaredDistance) > 0 )
+      {
+	for (int j = 0; j < pointIdxNKNSearch.size (); ++j) 
+	{ 
+	    r = cloud->points[ pointIdxNKNSearch[j] ].r;
+	    g = cloud->points[ pointIdxNKNSearch[j] ].g;
+	    b = cloud->points[ pointIdxNKNSearch[j] ].b;
+
+	    red += int(r);
+	    green += int(g);
+	    blue += int(b);
+	}  
+      }
+      cloud_color_mesh.points[i].r = int(red/pointIdxNKNSearch.size ()+0.5); 
+      cloud_color_mesh.points[i].g = int(green/pointIdxNKNSearch.size ()+0.5); 
+      cloud_color_mesh.points[i].b = int(blue/pointIdxNKNSearch.size ()+0.5);
+  }
+      toPCLPointCloud2(cloud_color_mesh, mesh.cloud);
 }
 
 void scene::reconsruction::get_config()
