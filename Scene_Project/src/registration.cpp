@@ -1,6 +1,4 @@
 #include "registration.h"
-//test
-#include <pcl/visualization/pcl_visualizer.h>
 
 scene::registration::registration()
 {
@@ -117,7 +115,7 @@ void scene::registration::global_registration(std::vector< boost::shared_ptr< pc
 
 void scene::registration::get_config()
 {
-    ifstream fin("project_config.json");
+    std::ifstream fin("project_config.json");
     rapidjson::IStreamWrapper isw(fin);
     
     rapidjson::Document document;

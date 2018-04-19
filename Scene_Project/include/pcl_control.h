@@ -16,9 +16,9 @@ namespace scene{
    * \'c' icp 
    * \'n' ndt
    * \'r' 重建 reconstruction
+   * \'t' 测试
    */ 
-  static const char *optString = "ilcnr";  
-
+  static const char *optString = "ilcnrt";  
   
   void get_opt_string(int argc,char **argv);
   
@@ -27,4 +27,6 @@ namespace scene{
   void registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data);
   
   void reconstruction_test(pcl::PointCloud<PointT>::Ptr cloud);
+  
+  void test();
 }

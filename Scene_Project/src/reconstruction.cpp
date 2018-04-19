@@ -39,16 +39,7 @@ void scene::reconsruction::moving_least_sauares(pcl::PointCloud< scene::PointT >
 
 void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
 {
-  /*
-  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
-  pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
-  tree->setInputCloud(cloud);
-  pcl::NormalEstimation<pcl::PointXYZRGB,pcl::Normal> ne;
-  ne.setInputCloud(cloud);
-  ne.setSearchMethod(tree);
-  ne.setKSearch(30);
-  ne.compute(*cloud_normals);
-  */
+  
   Eigen::Vector4f centroid;
   pcl::compute3DCentroid(*cloud,centroid);
   pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);

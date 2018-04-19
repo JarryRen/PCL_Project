@@ -11,8 +11,7 @@ void scene::get_opt_string(int argc, char** argv)
   std::vector<cv::Mat> png_data;
   std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data;
   scene::myfilter mf;
-	
-
+  
   while( ( opt_result = getopt(argc,argv,optString)) != -1 )
   {
     switch(opt_result)
@@ -28,7 +27,6 @@ void scene::get_opt_string(int argc, char** argv)
 	break;
       case 'c':
 	std::cout<<"------ICP逐帧配准."<<std::endl;
-	
 	registration_test(cloud_data);
 	break;
       case 'n':
@@ -38,20 +36,18 @@ void scene::get_opt_string(int argc, char** argv)
 	mf.pcd_filter(cloud_data);
 	reconstruction_test(cloud_data[0]);
 	break;
+      case 't':
+	std::cout<<"//test."<<std::endl;
+	test();
+	break;
       default:
-	std::cout<<"Error Parameter! // Test"<<std::endl;
-	
-	pcl::PolygonMesh mesh;
-	pcl::io::loadPolygonFileVTK("test_mesh.vtk",mesh);
-	pcl::visualization::PCLVisualizer viewer("mesh viewer");
-	viewer.setBackgroundColor(128,128,128);
-	viewer.addPolygonMesh(mesh,"mesh");
-	while (!viewer.wasStopped())
-	{
-	    viewer.spinOnce(100);
-	    boost::this_thread::sleep(boost::posix_time::microseconds(100000));
-	}
-   
+	std::cout<<"Error Parameter!"<<std::endl;
+	std::cout<<"-i 图像转PCD"<<std::endl;
+	std::cout<<"-l load pcd"<<std::endl;
+	std::cout<<"-t icp "<<std::endl;
+	std::cout<<"-n ndt"<<std::endl;
+	std::cout<<"-r 重建"<<std::endl;
+	std::cout<<"-t test"<<std::endl;
 	break;
     }
   }
@@ -79,7 +75,6 @@ void scene::registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > &clou
 
 void scene::reconstruction_test(pcl::PointCloud< scene::PointT >::Ptr cloud)
 {
-  
   pcl::PolygonMesh mesh;
   scene::reconsruction rec;
   rec.pcd_to_mesh(cloud,mesh,1);
@@ -96,4 +91,17 @@ void scene::reconstruction_test(pcl::PointCloud< scene::PointT >::Ptr cloud)
   
 }
 
+void scene::test()
+{
+  pcl::visualization::PCLVisualizer viewer("mesh viewer");
+  pcl::PolygonMesh mesh;
+  pcl::io::loadPolygonFileVTK("test_mesh.vtk",mesh);
+  viewer.setBackgroundColor(128,128,128);
+  viewer.addPolygonMesh(mesh,"mesh");
+  while (!viewer.wasStopped())
+  {
+      viewer.spinOnce(100);
+      boost::this_thread::sleep(boost::posix_time::microseconds(100000));
+  }
+}
 
