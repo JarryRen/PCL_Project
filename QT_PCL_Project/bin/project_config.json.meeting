@@ -1,0 +1,18 @@
+{
+  "filters":
+  {
+  "leaf_size":0.01,
+  "nr_k":50,
+  "stddev_mult":1
+  },
+  "registration":
+  {
+  "leaf_size":0.07,
+  "ne_radius":0.5,
+  "fpfh_radius":0.5,
+  "max_distance":0.01,
+  "max_iterations":150,
+  "trans_epsilon":1e-10,
+  "ef_epsilon":1
+  }
+}
