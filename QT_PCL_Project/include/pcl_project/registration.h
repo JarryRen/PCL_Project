@@ -10,10 +10,10 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/registration/ia_ransac.h>
 #include <pcl/registration/icp.h>
-//scene
-#include "type.h"
+//gp
+#include "pcl_project/type.h"
 
-namespace scene{
+namespace gp{
   
   class registration{
   public:
@@ -49,7 +49,7 @@ namespace scene{
      * \param[out] source_out 处理后的源点云
      * \param[out] sac_trans 粗配转换矩阵
      */ 
-    void sac_ia(pcl::PointCloud<PointT>::Ptr source,pcl::PointCloud<PointT>::Ptr target, pcl::PointCloud< scene::PointT >::Ptr source_out,
+    void sac_ia(pcl::PointCloud<PointT>::Ptr source,pcl::PointCloud<PointT>::Ptr target, pcl::PointCloud< PointT >::Ptr source_out,
 		Eigen::Matrix4f &sac_trans);
     
     /** \brief 迭代最近点

@@ -9,7 +9,7 @@
 int main(int argc, char **argv) {
     std::cout << "PCL | Scene" << std::endl;
     
-    scene::get_opt_string(argc,argv);
+    gp::get_opt_string(argc,argv);
     
     return 0;
 }

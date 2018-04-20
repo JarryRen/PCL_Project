@@ -7,7 +7,8 @@
 #include "3rdParty/rapidjson/istreamwrapper.h"
 #include <fstream>
 
-namespace scene{
+//Graduation Project
+namespace gp{
   typedef pcl::PointXYZRGB PointT;
   
   //KinectV1相机内参

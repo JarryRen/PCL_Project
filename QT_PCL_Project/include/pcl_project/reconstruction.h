@@ -9,10 +9,10 @@
 #include <pcl/surface/mls.h>
 #include <pcl/surface/poisson.h>
 #include <pcl/surface/gp3.h>
-//scene
-#include "type.h"
+//gp
+#include "pcl_project/type.h"
 
-namespace scene{ 
+namespace gp{ 
   class reconsruction{
   public:
     reconsruction();
@@ -22,7 +22,7 @@ namespace scene{
      * \param[out] mesh 重建后的网格模型
      * \param[in] method 使用方法 \1 泊松  \2 三角化
      */ 
-    void pcd_to_mesh(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method);
+    void pcd_to_mesh(pcl::PointCloud< PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method);
     
   private:
     double mls_radius;

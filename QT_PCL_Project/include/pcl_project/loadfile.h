@@ -12,10 +12,10 @@
 //pcl
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/vtk_io.h>
-//scene
-#include "type.h"
+//gp
+#include "pcl_project/type.h"
 
-namespace scene{
+namespace gp{
   
   /** \brief 导入图像文件
    * \param[in] argc 参数行数

@@ -1,6 +1,6 @@
-#include "loadfile.h"
+#include "pcl_project/loadfile.h"
 
-void scene::load_image(int argc, char** argv, std::vector< cv::Mat >& png_data)
+void gp::load_image(int argc, char** argv, std::vector< cv::Mat >& png_data)
 {
   std::string  extension(".png");
   //第一个参数为命令本身,最后为选项参数
@@ -16,7 +16,7 @@ void scene::load_image(int argc, char** argv, std::vector< cv::Mat >& png_data)
   }
 }
 
-void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
+void gp::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
   cv::Mat rgb,depth;
   for(int i=0;i<png_data.size();i+=2)
@@ -51,7 +51,7 @@ void scene::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::Poi
   }
 }
 
-void scene::save_pcd(std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
+void gp::save_pcd(std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
   std::string  dir="./pcd_data";
   if(access(dir.c_str(),0)==-1)
@@ -73,7 +73,7 @@ void scene::save_pcd(std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
   }
 }
 
-void scene::load_pcd(int argc, char** argv, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
+void gp::load_pcd(int argc, char** argv, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
   std::cout<<"Point Cloud loading..."<<std::endl;
   std::string  extension(".pcd");

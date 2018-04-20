@@ -1,11 +1,11 @@
-#include "registration.h"
+#include "pcl_project/registration.h"
 
-scene::registration::registration()
+gp::registration::registration()
 {
   get_config();
 }
 
-void scene::registration::pre_process(pcl::PointCloud< scene::PointT >::Ptr input, pcl::PointCloud< scene::PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
+void gp::registration::pre_process(pcl::PointCloud< gp::PointT >::Ptr input, pcl::PointCloud< gp::PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
 {
   //去除NAN点
   std::vector<int> indieces;
@@ -37,8 +37,8 @@ void scene::registration::pre_process(pcl::PointCloud< scene::PointT >::Ptr inpu
   fpfh.compute(*fpfhs);
 }
 
-void scene::registration::sac_ia(pcl::PointCloud< scene::PointT >::Ptr source, pcl::PointCloud< scene::PointT >::Ptr target, 
-				 pcl::PointCloud< scene::PointT >::Ptr source_out,Eigen::Matrix4f &sac_trans)
+void gp::registration::sac_ia(pcl::PointCloud< gp::PointT >::Ptr source, pcl::PointCloud< gp::PointT >::Ptr target, 
+				 pcl::PointCloud< gp::PointT >::Ptr source_out,Eigen::Matrix4f &sac_trans)
 {
   pcl::PointCloud< PointT >::Ptr target_o(new pcl::PointCloud< PointT > );
   pcl::PointCloud< pcl::FPFHSignature33 >::Ptr source_fpfhs(new pcl::PointCloud< pcl::FPFHSignature33 >);
@@ -57,7 +57,7 @@ void scene::registration::sac_ia(pcl::PointCloud< scene::PointT >::Ptr source, p
   sac_trans = sac_ia.getFinalTransformation();
 }
 
-void scene::registration::iterative_closest_point(pcl::PointCloud< scene::PointT >::Ptr source, pcl::PointCloud< scene::PointT >::Ptr target, 
+void gp::registration::iterative_closest_point(pcl::PointCloud< gp::PointT >::Ptr source, pcl::PointCloud< gp::PointT >::Ptr target, 
 						  Eigen::Matrix4f& sac_trans, Eigen::Matrix4f& icp_trans)
 {
   pcl::PointCloud<PointT>::Ptr icp_cloud(new pcl::PointCloud<PointT>);
@@ -73,12 +73,12 @@ void scene::registration::iterative_closest_point(pcl::PointCloud< scene::PointT
   icp_trans = icp.getFinalTransformation();
 }
 
-void scene::registration::global_registration(std::vector< boost::shared_ptr< pcl::PointCloud< scene::PointT > > >& cloud_data, 
-					      pcl::PointCloud< scene::PointT >::Ptr global_alian_cloud)
+void gp::registration::global_registration(std::vector< boost::shared_ptr< pcl::PointCloud< gp::PointT > > >& cloud_data, 
+					      pcl::PointCloud< gp::PointT >::Ptr global_alian_cloud)
 {
   if( cloud_data.empty() )
   {
-    PCL_ERROR("cloud_data is empty in scene::registration::global_registration.");
+    PCL_ERROR("cloud_data is empty in gp::registration::global_registration.");
   }
   pcl::PointCloud<PointT>::Ptr icp_cloud(new pcl::PointCloud<PointT>);
   pcl::PointCloud<PointT>::Ptr source,target;
@@ -113,7 +113,7 @@ void scene::registration::global_registration(std::vector< boost::shared_ptr< pc
   }
 }
 
-void scene::registration::get_config()
+void gp::registration::get_config()
 {
     std::ifstream fin("project_config.json");
     rapidjson::IStreamWrapper isw(fin);

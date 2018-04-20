@@ -1,12 +1,11 @@
-#include "myfilter.h"
-#include <boost/graph/graph_concepts.hpp>
+#include "pcl_project/myfilter.h"
 
-scene::myfilter::myfilter()
+gp::myfilter::myfilter()
 {
   get_config();
 }
 
-void scene::myfilter::pcd_filter(std::vector< boost::shared_ptr< pcl::PointCloud< scene::PointT > > >& cloud_data)
+void gp::myfilter::pcd_filter(std::vector< boost::shared_ptr< pcl::PointCloud< gp::PointT > > >& cloud_data)
 {
   for(int i=0; i<cloud_data.size();i++)
   {
@@ -32,7 +31,7 @@ void scene::myfilter::pcd_filter(std::vector< boost::shared_ptr< pcl::PointCloud
 }
 
 
-void scene::myfilter::get_config()
+void gp::myfilter::get_config()
 {
     std::fstream fin("project_config.json");
     rapidjson::IStreamWrapper isw(fin);

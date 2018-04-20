@@ -1,13 +1,13 @@
-#include "reconstruction.h"
+#include "pcl_project/reconstruction.h"
 
-scene::reconsruction::reconsruction()
+gp::reconsruction::reconsruction()
 {
   get_config();
 }
 
-void scene::reconsruction::pcd_to_mesh(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method)
+void gp::reconsruction::pcd_to_mesh(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method)
 {
-  pcl::PointCloud< scene::PointT >::Ptr cloud_mls(new pcl::PointCloud< scene::PointT >);
+  pcl::PointCloud< gp::PointT >::Ptr cloud_mls(new pcl::PointCloud< gp::PointT >);
   moving_least_sauares(cloud,cloud_mls);
   if(method == 1){
     poisson(cloud_mls,mesh);
@@ -17,7 +17,7 @@ void scene::reconsruction::pcd_to_mesh(pcl::PointCloud< scene::PointT >::Ptr clo
   }
 }
 
-void scene::reconsruction::moving_least_sauares(pcl::PointCloud< scene::PointT >::Ptr input, pcl::PointCloud< scene::PointT >::Ptr output)
+void gp::reconsruction::moving_least_sauares(pcl::PointCloud< gp::PointT >::Ptr input, pcl::PointCloud< gp::PointT >::Ptr output)
 {
   pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
   tree->setInputCloud(input);
@@ -37,7 +37,7 @@ void scene::reconsruction::moving_least_sauares(pcl::PointCloud< scene::PointT >
   mls.process(*output);
 }
 
-void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
+void gp::reconsruction::poisson(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
 {
   
   Eigen::Vector4f centroid;
@@ -66,7 +66,7 @@ void scene::reconsruction::poisson(pcl::PointCloud< scene::PointT >::Ptr cloud, 
   poisson.reconstruct(mesh);
 }
 
-void scene::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud< scene::PointT >::Ptr cloud)
+void gp::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud< gp::PointT >::Ptr cloud)
 {
   pcl::PointCloud<PointT> cloud_color_mesh; 
   pcl::fromPCLPointCloud2(mesh.cloud, cloud_color_mesh); 
@@ -106,7 +106,7 @@ void scene::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud
       toPCLPointCloud2(cloud_color_mesh, mesh.cloud);
 }
 
-void scene::reconsruction::get_config()
+void gp::reconsruction::get_config()
 {
     std::ifstream fin("project_config.json");
     rapidjson::IStreamWrapper isw(fin);

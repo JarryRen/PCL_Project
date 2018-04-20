@@ -1,16 +1,16 @@
-#include "pcl_control.h"
+#include "pcl_project/pcl_control.h"
 
 //test
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/io/vtk_lib_io.h>
 
-void scene::get_opt_string(int argc, char** argv)
+void gp::get_opt_string(int argc, char** argv)
 {
   int opt_result;
   //可能需要的存储容器
   std::vector<cv::Mat> png_data;
   std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data;
-  scene::myfilter mf;
+  gp::myfilter mf;
   
   while( ( opt_result = getopt(argc,argv,optString)) != -1 )
   {
@@ -18,12 +18,12 @@ void scene::get_opt_string(int argc, char** argv)
     {
       case 'i':
 	std::cout<<"------图像转点云."<<std::endl;
-	scene::load_image(argc,argv,png_data);
-	scene::image_to_pcd(png_data,cloud_data);
-	scene::save_pcd(cloud_data);
+	gp::load_image(argc,argv,png_data);
+	gp::image_to_pcd(png_data,cloud_data);
+	gp::save_pcd(cloud_data);
 	break;
       case 'l':
-	scene::load_pcd(argc,argv,cloud_data);
+	gp::load_pcd(argc,argv,cloud_data);
 	break;
       case 'c':
 	std::cout<<"------ICP逐帧配准."<<std::endl;
@@ -53,30 +53,30 @@ void scene::get_opt_string(int argc, char** argv)
   }
 }
 
-void scene::load_file(int argc, char** argv)
+void gp::load_file(int argc, char** argv)
 {
   std::vector<cv::Mat> png_data;
   std::vector<pcl::PointCloud<PointT>::Ptr > cloud_data;
-  scene::load_image(argc,argv,png_data);
-  scene::image_to_pcd(png_data,cloud_data);
-  scene::save_pcd(cloud_data);
+  gp::load_image(argc,argv,png_data);
+  gp::image_to_pcd(png_data,cloud_data);
+  gp::save_pcd(cloud_data);
 }
 
-void scene::registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data)
+void gp::registration_test(  std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data)
 {
-  scene::myfilter mf;
+  gp::myfilter mf;
   mf.pcd_filter(cloud_data);
   
   pcl::PointCloud<PointT>::Ptr global_cloud (new pcl::PointCloud<PointT>);
-  scene::registration reg;
+  gp::registration reg;
   reg.global_registration(cloud_data,global_cloud);
   pcl::io::savePCDFile("global_cloud.pcd",*global_cloud,true);
 }
 
-void scene::reconstruction_test(pcl::PointCloud< scene::PointT >::Ptr cloud)
+void gp::reconstruction_test(pcl::PointCloud< gp::PointT >::Ptr cloud)
 {
   pcl::PolygonMesh mesh;
-  scene::reconsruction rec;
+  gp::reconsruction rec;
   rec.pcd_to_mesh(cloud,mesh,1);
   pcl::io::saveVTKFile("test_mesh.vtk",mesh);
 
@@ -91,7 +91,7 @@ void scene::reconstruction_test(pcl::PointCloud< scene::PointT >::Ptr cloud)
   
 }
 
-void scene::test()
+void gp::test()
 {
   pcl::visualization::PCLVisualizer viewer("mesh viewer");
   pcl::PolygonMesh mesh;

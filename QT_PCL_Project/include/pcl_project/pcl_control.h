@@ -2,13 +2,13 @@
 #pragma once
 //linux io 
 #include <unistd.h>
-//scene
-#include "loadfile.h"
-#include "registration.h"
-#include "reconstruction.h"
-#include "myfilter.h"
+//gp
+#include "pcl_project/loadfile.h"
+#include "pcl_project/registration.h"
+#include "pcl_project/reconstruction.h"
+#include "pcl_project/myfilter.h"
 
-namespace scene{
+namespace gp{
   
   /** \brief 选项字符串，命令行参数设置
    * \'i' 图像转PCD

@@ -2,10 +2,10 @@
 //pcl
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
-//scene
-#include "type.h"
+//gp
+#include "pcl_project/type.h"
 
-namespace scene {
+namespace gp{
   
   class myfilter{
   public:

@@ -12,4 +12,5 @@ add_definitions(${PCL_DEFINITIONS})
 FIND_PACKAGE( OpenCV REQUIRED )
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include/pcl_project/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
