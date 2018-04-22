@@ -2,9 +2,9 @@
 
 ## Environment
 * Ubuntu 14.04
-* PCL 1.7
+* PCL 1.8.1 | (VTK 8.1)
 * OpenCV 2.8
-* CMake 2.8 or later
+* CMake 3.11.1
 * KDevelop 4.13.3 / Qt Creator 4.5.1
 * RapidJSON
 

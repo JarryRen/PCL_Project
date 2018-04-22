@@ -10,7 +10,7 @@ void gp::registration::pre_process(pcl::PointCloud< gp::PointT >::Ptr input, pcl
   //去除NAN点
   std::vector<int> indieces;
   pcl::removeNaNFromPointCloud(*input,*input,indieces);
-  
+
   pcl::VoxelGrid<PointT> grid;
   grid.setInputCloud(input);
   grid.setLeafSize(leaf_size,leaf_size,leaf_size);
