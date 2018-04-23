@@ -1,6 +1,3 @@
-#pcl
-file(GLOB SOURCE_PCL ./pcl_project/*.cpp)
-
 #qt
 file(GLOB QT_SRC_FILE ./qt_project/*.cpp)
 file(GLOB QT_UI_FILE ${PROJECT_SOURCE_DIR}/forms/*.ui)
@@ -19,19 +16,24 @@ add_library(QT_LIB SHARED
     ${QT_RCC_MOC}
     )
 target_link_libraries(QT_LIB
-    Qt5::Widgets)
+    Qt5::Widgets
+    )
+
+#pcl
+file(GLOB SOURCE_PCL ./pcl_project/*.cpp)
+
 
 #main project
 add_executable(${PROJECT_NAME}
     main.cpp
     ${SOURCE_PCL}
-    ${QT_SRC_FILE})
-
+    ${QT_SRC_FILE}
+    )
 target_link_libraries(${PROJECT_NAME}
     ${PCL_LIBRARIES}
     ${OpenCV_LIBS}
-    QT_LIB)
-
+    QT_LIB
+    )
 #build path
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

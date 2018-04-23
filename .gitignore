@@ -2,12 +2,15 @@
 PCL_Object_Project/bin/*
 PCL_Object_Project/build/*
 
-#pcl scene temp files
+#qt pcl project temp files
+*~
 *.kdev4
 *.pcd
 *.png
-QT_PCL_Project/.kdve4/*
+*.vtk
+.kdve4/
+build/
+3rdParty/
+QT_PCL_Project/bin/qt_pcl_project
 QT_PCL_Project/bin/scene_project
-QT_PCL_Project/build/*
-QT_PCL_Project/include/3rdParty/rapidjson/*
 
