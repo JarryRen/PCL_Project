@@ -4,6 +4,7 @@ PCL_Object_Project/build/*
 
 #qt pcl project temp files
 *~
+*.swp
 *.kdev4
 *.pcd
 *.png
