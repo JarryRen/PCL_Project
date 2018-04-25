@@ -15,12 +15,6 @@
 
 namespace Ui
 {
-class PCLViewer;
-}
-
-
-namespace Ui
-{
   class PCLViewer;
 }
 

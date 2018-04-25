@@ -38,7 +38,7 @@ void PCLViewer::open_pcd()
     QStringList::const_iterator itr;
     for(itr = filenames.constBegin();itr!=filenames.constEnd();itr++)
     {
-        std::String tmp;
+        std::string tmp;
         std::cout << (*itr).toLocal8Bit().constData() <<std::endl;
     }
 

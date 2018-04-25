@@ -38,6 +38,13 @@ void gp::reconsruction::moving_least_sauares(pcl::PointCloud< gp::PointT >::Ptr 
   mls.process(*output);
 }
 
+void gp::reconsruction::normlas_consistency(pcl::PointCloud<pcl::Normal>::Ptr input, pcl::PointCloud<pcl::Normal>::Ptr output)
+{
+    input->points[0].normal;
+    pcl::Normal test;
+    test.normal;
+}
+
 
 void gp::reconsruction::poisson(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
 {

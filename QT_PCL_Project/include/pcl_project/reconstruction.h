@@ -37,11 +37,11 @@ namespace gp{
      */ 
     void moving_least_sauares(pcl::PointCloud<PointT>::Ptr input,pcl::PointCloud<PointT>::Ptr output);
     
-    /** \brief 法向量一致化
-     * \param[in] input 
-     * \param[out] output 
+    /** \brief 法向量一致化 
+     * \param[in] input 未一致化的法向量集
+     * \param[out] output 处理后的法向量
      */     
-    void normlas();
+    void normlas_consistency(pcl::PointCloud<pcl::Normal>::Ptr input,pcl::PointCloud<pcl::Normal>::Ptr output);
     
     /** \brief 泊松重建
      * \param[in] cloud 输入点云

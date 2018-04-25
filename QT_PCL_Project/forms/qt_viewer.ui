@@ -300,7 +300,7 @@
    </property>
    <widget class="QMenu" name="menu_file">
     <property name="title">
-     <string>wenjian</string>
+     <string>文件</string>
     </property>
     <addaction name="action_open_PCD"/>
    </widget>
@@ -308,7 +308,7 @@
   </widget>
   <action name="action_open_PCD">
    <property name="text">
-    <string>Open PCD</string>
+    <string>打开文件</string>
    </property>
   </action>
  </widget>
