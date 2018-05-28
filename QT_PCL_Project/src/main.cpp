@@ -16,9 +16,9 @@ int main(int argc, char **argv) {
     PCLViewer w;
     w.show ();
 
-   // gp PCL project
+    //gp PCL project
     //gp::get_opt_string(argc,argv);
     
     return a.exec();
-//    return 0;
+    //return 0;
 }

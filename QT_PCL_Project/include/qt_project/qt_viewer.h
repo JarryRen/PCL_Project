@@ -11,8 +11,9 @@
 #include <vtkRenderWindow.h>
 //gp
 #include "pcl_project/loadfile.h"
-#include "pcl_project/reconstruction.h"
 #include "pcl_project/data_processing.h"
+#include "pcl_project/registration.h"
+#include "pcl_project/reconstruction.h"
 
 namespace Ui
 {
@@ -21,6 +22,7 @@ namespace Ui
 
 class PCLViewer : public QMainWindow
 {
+    typedef pcl::PointXYZRGB PointT;
   Q_OBJECT
 
 public:
@@ -29,28 +31,34 @@ public:
 
 public slots:
   void openPCD();
+
   /**
    * @brief image_to_pcd
    */
   void imageToPCD();
+
   /**
    * @brief icp_registration
    * @param[in]
    */
- // void icp_registration();
+  void icpRegistration();
+
+  void icpUpdateView(pcl::PointCloud<PointT>::Ptr cloud_src, pcl::PointCloud<PointT>::Ptr cloud_global);
+
   /**
    * @brief reconstruction
    */
   void reconstruction();
 
 protected:
-  boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
+  boost::shared_ptr<pcl::visualization::PCLVisualizer> m_viewer;
+  pcl::PointCloud<PointT>::Ptr m_cloud;
 
-  void initWidget();
+  void initWidgetViewer();
 
 private:
   Ui::PCLViewer *ui;
+
 };
 
 #endif

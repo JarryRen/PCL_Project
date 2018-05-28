@@ -9,6 +9,9 @@ PCL_Object_Project/build/*
 *.pcd
 *.png
 *.vtk
+*.so
+*.a
+
 .kdve4/
 build/
 3rdParty/

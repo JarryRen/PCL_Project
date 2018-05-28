@@ -26,7 +26,12 @@ namespace gp{
   public:
     reconsruction();
     
-    /** \brief 点云转换到模型 模板函数
+    /**
+     * @brief run Qt界面使用的函数
+     */
+    void run();
+
+    /** \brief 点云转换到模型  命令行情况
      * \param[in] cloud 输入点云
      * \param[out] mesh 重建后的网格模型
      * \param[in] method 使用方法 \1 泊松  \2 三角化

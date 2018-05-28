@@ -29,7 +29,15 @@ namespace gp{
   public:
     registration();
     
-    /** \brief 全局配准
+    /**
+     * @brief run Qt界面情况
+     * @param source 需要处理的源点云
+     * @param target  目标点云
+     * @param complete_trans 完成的ICP变换矩阵
+     */
+    void run(pcl::PointCloud<PointT>::Ptr source, pcl::PointCloud<PointT>::Ptr target, Eigen::Matrix4f &complete_trans);
+
+    /** \brief 全局配准 命令行情况
      * \param[in] cloud_data 点云对象指针容器
      * \param[out] cloud 配准完成的点云对象指针
      */ 

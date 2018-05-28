@@ -127,11 +127,23 @@
     </property>
     <addaction name="action_open_PCD"/>
    </widget>
+   <widget class="QMenu" name="menu_display">
+    <property name="title">
+     <string>显示</string>
+    </property>
+    <addaction name="action_clear"/>
+   </widget>
    <addaction name="menu_file"/>
+   <addaction name="menu_display"/>
   </widget>
   <action name="action_open_PCD">
    <property name="text">
     <string>打开文件</string>
+   </property>
+  </action>
+  <action name="action_clear">
+   <property name="text">
+    <string>清空显示</string>
    </property>
   </action>
  </widget>

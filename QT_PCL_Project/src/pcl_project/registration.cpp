@@ -5,6 +5,15 @@ gp::registration::registration()
   get_config();
 }
 
+void gp::registration::run(pcl::PointCloud<PointT>::Ptr source, pcl::PointCloud<PointT>::Ptr target, Eigen::Matrix4f &complete_trans)
+{
+    Eigen::Matrix4f sac_trans;
+    pcl::PointCloud<PointT>::Ptr source_sac(new pcl::PointCloud<PointT>);
+    sac_ia(source, target, source_sac, sac_trans);
+
+    iterative_closest_point(source_sac, target, sac_trans, complete_trans);
+}
+
 void gp::registration::pre_process(pcl::PointCloud< PointT >::Ptr input, pcl::PointCloud< PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
 {
   //去除NAN点
