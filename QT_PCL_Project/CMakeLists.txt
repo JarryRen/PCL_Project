@@ -5,16 +5,16 @@ project(qt_pcl_project)
 set(CMAKE_BUILD_TYPE "Debug")
 
 #PCL
-find_package(PCL REQUIRED)
+find_package( PCL REQUIRED )
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 #OpenCV
-FIND_PACKAGE( OpenCV REQUIRED )
+find_package( OpenCV REQUIRED )
 
 #Qt
-find_package(Qt5 REQUIRED Widgets)
+find_package( Qt5 REQUIRED Widgets )
 
 #gp
 include_directories(${PROJECT_SOURCE_DIR}/include)

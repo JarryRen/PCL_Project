@@ -13,7 +13,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/vtk_io.h>
 //gp
-#include "pcl_project/type.h"
+#include "pcl_project/config.h"
 
 namespace gp{
   
@@ -43,9 +43,7 @@ namespace gp{
    */ 
   void load_pcd(int argc,char **argv,std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data);
   
-  /** \brief 加载JSON配置文件
-   * 
-   * 
+  /** @brief 加载JSON配置文件
    */ 
   void load_config_json();
 }

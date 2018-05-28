@@ -6,12 +6,13 @@
 #include <QMainWindow>
 #include <QFileDialog>
 //pcl
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 //VTK
 #include <vtkRenderWindow.h>
+//gp
+#include "pcl_project/loadfile.h"
+#include "pcl_project/reconstruction.h"
+#include "pcl_project/data_processing.h"
 
 namespace Ui
 {
@@ -27,13 +28,26 @@ public:
   ~PCLViewer ();
 
 public slots:
-  void open_pcd();
+  void openPCD();
+  /**
+   * @brief image_to_pcd
+   */
+  void imageToPCD();
+  /**
+   * @brief icp_registration
+   * @param[in]
+   */
+ // void icp_registration();
+  /**
+   * @brief reconstruction
+   */
+  void reconstruction();
 
 protected:
   boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
 
-  void init_widget();
+  void initWidget();
 
 private:
   Ui::PCLViewer *ui;

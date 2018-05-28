@@ -7,7 +7,7 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 //gp
-#include "pcl_project/type.h"
+#include "pcl_project/config.h"
 
 namespace gp{
   

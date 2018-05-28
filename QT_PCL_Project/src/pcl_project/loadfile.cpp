@@ -2,22 +2,31 @@
 
 void gp::load_image(int argc, char** argv, std::vector< cv::Mat >& png_data)
 {
-  std::string  extension(".png");
+    std::string  extension(".png");
   //第一个参数为命令本身,最后为选项参数
-  for(int i=1;i<=(argc-1)/2;i++){
-    std::string filename=std::string(argv[i]);
-    if(filename.size()<=extension.size())
-      continue;
-    cv::Mat rgb,depth;
-    rgb=cv::imread(argv[i]);
-    depth=cv::imread(argv[(argc-1)/2+i],-1);//onlyread
-    png_data.push_back(rgb);
-    png_data.push_back(depth);
-  }
+    for(int i=1;i<=(argc-1)/2;i++){
+        std::string filename=std::string(argv[i]);
+        if(filename.size()<=extension.size())
+            continue;
+        cv::Mat rgb,depth;
+        rgb=cv::imread(argv[i]);
+        depth=cv::imread(argv[(argc-1)/2+i],-1);//onlyread
+        png_data.push_back(rgb);
+        png_data.push_back(depth);
+    }
 }
 
 void gp::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::PointCloud<PointT>::Ptr >& cloud_data)
 {
+    //KinectV1相机内参
+    const double CAMERA_FACTOR = 1000;
+    const double CAMERA_CX = 325.5;
+    const double CAMERA_CY = 253.5;
+    const double CAMERA_FX = 518.0;
+    const double CAMERA_FY = 519.0;
+
+
+
   cv::Mat rgb,depth;
   for(int i=0;i<png_data.size();i+=2)
   {
@@ -33,9 +42,9 @@ void gp::image_to_pcd(std::vector< cv::Mat >& png_data, std::vector< pcl::PointC
 	if(d==0)
 	  continue;
 	PointT p;
-	p.z=double(d) / camera_factor;
-	p.x=(n-camera_cx)*p.z/camera_fx;
-	p.y=(m-camera_cy)*p.z/camera_fy;
+    p.z=double(d) / CAMERA_FACTOR;
+    p.x=(n-CAMERA_CX)*p.z/CAMERA_FX;
+    p.y=(m-CAMERA_CY)*p.z/CAMERA_FY;
     
 	p.b = rgb.ptr<uchar>(m)[n*3];
 	p.g = rgb.ptr<uchar>(m)[n*3+1];

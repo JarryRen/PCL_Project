@@ -8,13 +8,17 @@ PCLViewer::PCLViewer (QWidget *parent) :
   ui->setupUi (this);
   this->setWindowTitle ("PCL viewer");
 
-  init_widget();
+  initWidget();
 
-  connect(ui->action_open_PCD,SIGNAL(triggered(bool)),this,SLOT(open_pcd()));
+  connect(ui->action_open_PCD,SIGNAL(triggered(bool)),this,SLOT(openPCD()));
+  connect(ui->pushButton_recon,SIGNAL(triggered(bool)),this,SLOT(reconstruction()));
+
+  //image_to_pcd
+  connect(ui->pushButton_imagetopcd,SIGNAL(clicked(bool)), this, SLOT(imageToPCD()));
 
 }
 
-void PCLViewer::init_widget()
+void PCLViewer::initWidget()
 {
     cloud.reset (new pcl::PointCloud<pcl::PointXYZ>);
     viewer.reset (new pcl::visualization::PCLVisualizer ("viewer", false));
@@ -28,7 +32,7 @@ void PCLViewer::init_widget()
     ui->qvtkWidget->update ();
 }
 
-void PCLViewer::open_pcd()
+void PCLViewer::openPCD()
 {
     QString filename = QFileDialog::getOpenFileName(
                 this,tr("Open PointClud."),".",tr("Open PCD file(*.pcd)"));
@@ -51,6 +55,36 @@ void PCLViewer::open_pcd()
     viewer->resetCamera();
     ui->qvtkWidget->update();
 }
+
+void PCLViewer::imageToPCD(){
+    QStringList png_filenames = QFileDialog::getOpenFileNames(
+                this,tr("选取图像转点云的RGB和深度图像."),".",tr("打开PNG文件(*.png)"));
+    QStringList::const_iterator itr;
+    for(itr = png_filenames.constBegin();itr!=png_filenames.constEnd();itr++)
+    {
+        std::string tmp;
+        std::cout << (*itr).toLocal8Bit().constData() <<std::endl;
+    }
+
+ //   cv
+//    gp::DataProcessing dp;
+ //   dp.image_to_pcd<pcl::PointXYZRGB>();
+}
+
+void PCLViewer::reconstruction()
+{
+    QString filename = QFileDialog::getOpenFileName(
+                this,tr("选取PCD文件."),".",tr("打开文件(*.pcd)"));
+    if(!filename.isEmpty())
+    {
+        pcl::io::loadPCDFile(filename.toStdString(),*cloud);
+    }
+
+    viewer->updatePointCloud(cloud,"cloud");
+    viewer->resetCamera();
+    ui->qvtkWidget->update();
+}
+
 
 
 PCLViewer::~PCLViewer ()

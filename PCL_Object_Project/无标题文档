@@ -20,12 +20,12 @@ sudo apt-get install mono-complete
 主要解决qt+vtk
 Qt自己安装官网版本
 //VTK
-cmake -DVTK_QT_VERSION:STRING=5 -DQT_QMAKE_EXECUTABLE:PATH=/home/zero/Qt5.10.1/5.10.1/gcc_64/bin/qmake -DVTK_Group_Qt:BOOL=ON -DCMAKE_PREFIX_PATH:PATH=/home/zero/Qt5.10.1/5.10.1/gcc_64/lib/cmake -DBUILD_SHARED_LIBS:BOOL=ON  /home/zero/Downloads/VTK-8.1.0  
+cmake -DVTK_QT_VERSION:STRING=5 -DQT_QMAKE_EXECUTABLE:PATH=/home/zero/Qt5.10.1/5.10.1/gcc_64/bin/qmake -DVTK_Group_Qt:BOOL=ON -DCMAKE_PREFIX_PATH:PATH=/home/zero/Qt5.10.1/5.10.1/gcc_64/lib/cmake -DBUILD_SHARED_LIBS:BOOL=ON  /home/zero/Downloads/VTK-7.1.1 
 make -j4  
 sudo make -j4 install 
 
 //pcl
-cmake -DCMAKE_BUILD_TYPE=Release ..  
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_OPENNI=ON -DWITH_OPENNI2=ON -L ..  
 make -j4  
 sudo make -j4 install  
 

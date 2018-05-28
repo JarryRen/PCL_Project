@@ -5,7 +5,7 @@ gp::registration::registration()
   get_config();
 }
 
-void gp::registration::pre_process(pcl::PointCloud< gp::PointT >::Ptr input, pcl::PointCloud< gp::PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
+void gp::registration::pre_process(pcl::PointCloud< PointT >::Ptr input, pcl::PointCloud< PointT >::Ptr output, pcl::PointCloud< pcl::FPFHSignature33 >::Ptr fpfhs)
 {
   //去除NAN点
   std::vector<int> indieces;
@@ -37,8 +37,8 @@ void gp::registration::pre_process(pcl::PointCloud< gp::PointT >::Ptr input, pcl
   fpfh.compute(*fpfhs);
 }
 
-void gp::registration::sac_ia(pcl::PointCloud< gp::PointT >::Ptr source, pcl::PointCloud< gp::PointT >::Ptr target, 
-				 pcl::PointCloud< gp::PointT >::Ptr source_out,Eigen::Matrix4f &sac_trans)
+void gp::registration::sac_ia(pcl::PointCloud< PointT >::Ptr source, pcl::PointCloud< PointT >::Ptr target,
+                 pcl::PointCloud< PointT >::Ptr source_out,Eigen::Matrix4f &sac_trans)
 {
   pcl::PointCloud< PointT >::Ptr target_o(new pcl::PointCloud< PointT > );
   pcl::PointCloud< pcl::FPFHSignature33 >::Ptr source_fpfhs(new pcl::PointCloud< pcl::FPFHSignature33 >);
@@ -57,7 +57,7 @@ void gp::registration::sac_ia(pcl::PointCloud< gp::PointT >::Ptr source, pcl::Po
   sac_trans = sac_ia.getFinalTransformation();
 }
 
-void gp::registration::iterative_closest_point(pcl::PointCloud< gp::PointT >::Ptr source, pcl::PointCloud< gp::PointT >::Ptr target, 
+void gp::registration::iterative_closest_point(pcl::PointCloud< PointT >::Ptr source, pcl::PointCloud< PointT >::Ptr target,
 						  Eigen::Matrix4f& sac_trans, Eigen::Matrix4f& icp_trans)
 {
   pcl::PointCloud<PointT>::Ptr icp_cloud(new pcl::PointCloud<PointT>);
@@ -73,8 +73,8 @@ void gp::registration::iterative_closest_point(pcl::PointCloud< gp::PointT >::Pt
   icp_trans = icp.getFinalTransformation();
 }
 
-void gp::registration::global_registration(std::vector< boost::shared_ptr< pcl::PointCloud< gp::PointT > > >& cloud_data, 
-					      pcl::PointCloud< gp::PointT >::Ptr global_alian_cloud)
+void gp::registration::global_registration(std::vector< boost::shared_ptr< pcl::PointCloud< PointT > > >& cloud_data,
+                          pcl::PointCloud< PointT >::Ptr global_alian_cloud)
 {
   if( cloud_data.empty() )
   {

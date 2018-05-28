@@ -3,8 +3,13 @@
  * 
  */
 #pragma once
-
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
 //pcl
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/fpfh.h>
@@ -13,12 +18,14 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/registration/ia_ransac.h>
 #include <pcl/registration/icp.h>
+//rapidjson
+#include "3rdParty/rapidjson/document.h"
+#include "3rdParty/rapidjson/istreamwrapper.h"
 //gp
-#include "pcl_project/type.h"
 
 namespace gp{
-  
   class registration{
+      typedef pcl::PointXYZRGB PointT;
   public:
     registration();
     
@@ -29,6 +36,8 @@ namespace gp{
     void global_registration(std::vector<pcl::PointCloud<PointT>::Ptr > &cloud_data,pcl::PointCloud<PointT>::Ptr global_alian_cloud);
   
   private:
+    std::string m_cfg_path;
+
     float leaf_size;
     double ne_radius;//法线计算半径
     double fpfh_radius;//fpfh特征计算半径

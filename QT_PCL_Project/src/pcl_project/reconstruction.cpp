@@ -5,9 +5,9 @@ gp::reconsruction::reconsruction()
   get_config();
 }
 
-void gp::reconsruction::pcd_to_mesh(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method)
+void gp::reconsruction::pcd_to_mesh(pcl::PointCloud< PointT >::Ptr cloud, pcl::PolygonMesh& mesh, int method)
 {
-  pcl::PointCloud< gp::PointT >::Ptr cloud_mls(new pcl::PointCloud< gp::PointT >);
+  pcl::PointCloud< PointT >::Ptr cloud_mls(new pcl::PointCloud< PointT >);
   moving_least_sauares(cloud,cloud_mls);
   if(method == 1){
     poisson(cloud_mls,mesh);
@@ -18,7 +18,7 @@ void gp::reconsruction::pcd_to_mesh(pcl::PointCloud< gp::PointT >::Ptr cloud, pc
   }
 }
 
-void gp::reconsruction::moving_least_sauares(pcl::PointCloud< gp::PointT >::Ptr input, pcl::PointCloud< gp::PointT >::Ptr output)
+void gp::reconsruction::moving_least_sauares(pcl::PointCloud< PointT >::Ptr input, pcl::PointCloud< PointT >::Ptr output)
 {
   pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
   tree->setInputCloud(input);
@@ -40,13 +40,14 @@ void gp::reconsruction::moving_least_sauares(pcl::PointCloud< gp::PointT >::Ptr 
 
 void gp::reconsruction::normlas_consistency(pcl::PointCloud<pcl::Normal>::Ptr input, pcl::PointCloud<pcl::Normal>::Ptr output)
 {
+
     input->points[0].normal;
     pcl::Normal test;
     test.normal;
 }
 
 
-void gp::reconsruction::poisson(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
+void gp::reconsruction::poisson(pcl::PointCloud< PointT >::Ptr cloud, pcl::PolygonMesh& mesh)
 {
   
   Eigen::Vector4f centroid;
@@ -75,7 +76,7 @@ void gp::reconsruction::poisson(pcl::PointCloud< gp::PointT >::Ptr cloud, pcl::P
   poisson.reconstruct(mesh);
 }
 
-void gp::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud< gp::PointT >::Ptr cloud)
+void gp::reconsruction::mesh_coloring(pcl::PolygonMesh& mesh, pcl::PointCloud< PointT >::Ptr cloud)
 {
   pcl::PointCloud<PointT> cloud_color_mesh; 
   pcl::fromPCLPointCloud2(mesh.cloud, cloud_color_mesh); 
