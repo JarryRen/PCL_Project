@@ -5,6 +5,7 @@
 //qt
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QMetaType>
 //pcl
 #include <pcl/visualization/pcl_visualizer.h>
 //VTK
@@ -15,6 +16,8 @@
 #include "pcl_project/registration.h"
 #include "pcl_project/reconstruction.h"
 
+#include "qt_project/qt_icp.h"
+#include "qt_project/qt_thread_type.h"
 namespace Ui
 {
   class PCLViewer;
@@ -30,25 +33,30 @@ public:
   ~PCLViewer ();
 
 public slots:
-  void openPCD();
+    void test();
 
-  /**
-   * @brief image_to_pcd
-   */
-  void imageToPCD();
 
-  /**
-   * @brief icp_registration
-   * @param[in]
-   */
-  void icpRegistration();
+    void openPCD();
 
-  void icpUpdateView(pcl::PointCloud<PointT>::Ptr cloud_src, pcl::PointCloud<PointT>::Ptr cloud_global);
+    /**
+    * @brief image_to_pcd
+    */
+    void imageToPCD();
 
-  /**
-   * @brief reconstruction
-   */
-  void reconstruction();
+    /**
+    * @brief icp_registration
+    * @param[in]
+    */
+    void icpRegistration();
+
+    void icpUpdateView(pcl::PointCloud<PointT>::Ptr cloud_src, pcl::PointCloud<PointT>::Ptr cloud_global);
+
+    void acceptPCD(MyCloudType source, MyCloudType cloud_global);
+
+    /**
+    * @brief reconstruction
+    */
+    void reconstruction();
 
 protected:
   boost::shared_ptr<pcl::visualization::PCLVisualizer> m_viewer;

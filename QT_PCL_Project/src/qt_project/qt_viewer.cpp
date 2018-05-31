@@ -8,6 +8,10 @@ PCLViewer::PCLViewer (QWidget *parent) :
   ui->setupUi (this);
   this->setWindowTitle ("PCL viewer");
 
+  //类型注册 用于子线程
+  qRegisterMetaType< MyCloudType >("MyCloudType");
+
+
   initWidgetViewer();
 
   connect(ui->action_open_PCD,SIGNAL(triggered(bool)),this,SLOT(openPCD()));
@@ -17,6 +21,10 @@ PCLViewer::PCLViewer (QWidget *parent) :
   connect(ui->pushButton_imageToPCD,SIGNAL(clicked(bool)), this, SLOT(imageToPCD()));
     //icp
   connect(ui->pushButton_icp,SIGNAL(clicked(bool)), this, SLOT(icpRegistration()));
+
+
+  connect(ui->pushButton,SIGNAL(clicked(bool)), this ,SLOT(test()));
+
 }
 
 void PCLViewer::initWidgetViewer()
@@ -31,7 +39,25 @@ void PCLViewer::initWidgetViewer()
     m_viewer->addPointCloud (m_cloud, "cloud");
     m_viewer->resetCamera ();
     ui->qvtkWidget->update ();
+
 }
+
+void PCLViewer::test()
+{
+    /*
+    QtICPThread *t1 = new QtICPThread() ;
+    QtICPThread *t2 = new QtICPThread();
+
+    connect(t1, SIGNAL(finished() ),t1,SLOT(stop() ));
+    connect(t2, SIGNAL(finished() ), t2,SLOT(stop() ));
+
+    t1->start();
+    t2->start();
+    */
+}
+
+
+
 
 void PCLViewer::openPCD()
 {
@@ -90,72 +116,37 @@ void PCLViewer::icpRegistration()
 {
     QStringList pcd_filenames = QFileDialog::getOpenFileNames(
                 this,tr("选取待配准的点云数据集."),".",tr("PCD点云文件(*.pcd)"));
-
     if( !pcd_filenames.isEmpty() )
     {
-        gp::registration reg;
-        Eigen::Matrix4f global_transform = Eigen::Matrix4f::Identity();
-        Eigen::Matrix4f icp_trans;
-        pcl::PointCloud<PointT>::Ptr global_aligned_cloud(new pcl::PointCloud<PointT>);
-        pcl::PointCloud<PointT>::Ptr icp_cloud(new pcl::PointCloud<PointT>);
-
-        pcl::PointCloud<PointT>::Ptr source(new pcl::PointCloud<PointT>);
-        pcl::PointCloud<PointT>::Ptr target(new pcl::PointCloud<PointT>);
-
-
-        QStringList::const_iterator itr = pcd_filenames.begin();
-        //第一个target为全局基础
-        pcl::io::loadPCDFile( (*itr).toLocal8Bit().constData(), *target );
-        itr++;
-
-        //初始化视图
         m_viewer->removePointCloud("source_cloud");
         m_viewer->removePointCloud("global_cloud");
         m_viewer->removePointCloud("cloud");
 
-        m_viewer->addPointCloud(source,"source_cloud");
-        m_viewer->addPointCloud(global_aligned_cloud, "global_cloud");
+        m_viewer->addPointCloud(m_cloud,"source_cloud");
+        m_viewer->addPointCloud(m_cloud, "global_cloud");
         m_viewer->resetCamera();
         ui->qvtkWidget->update();
-        //配准
-        for( ; itr != pcd_filenames.end(); itr++)
-        {
-            pcl::io::loadPCDFile( (*itr).toLocal8Bit().constData(), *source );
 
-            reg.run(source, target, icp_trans);
-
-
-
-            global_transform = global_transform * icp_trans;    //update global transform
-
-            std::cout<<"------icp 变换矩阵: "<<std::endl;
-            std::cout<<icp_trans<<std::endl;
-
-            pcl::transformPointCloud(*source, *icp_cloud, global_transform);
-
-            *global_aligned_cloud += *icp_cloud;
-
-            //更新视图
-      //      icpUpdateView(source, global_aligned_cloud);
-
-            pcl::visualization::PointCloudColorHandlerCustom<PointT> color_src(source, 255, 0, 0 );//red
-            pcl::visualization::PointCloudColorHandlerCustom<PointT> color_global(global_aligned_cloud, 0, 255, 0 );//green
-
-            m_viewer->updatePointCloud(source, color_src, "source_cloud");
-            m_viewer->updatePointCloud(global_aligned_cloud, color_global, "global_cloud");
-
-            m_viewer->resetCamera();
-            ui->qvtkWidget->update();
-
-
-
-            *target = *source;  //更新目标点云
-        }
-
-        //重新设定视图
+        QtICPThread *icp_thread = new QtICPThread(pcd_filenames);
+/*直接连接，不够稳定，相当于在子线程直接执行，不安全。
+        connect(icpthread,SIGNAL(send(pcl::PointCloud<PointT>,pcl::PointCloud<PointT>)),
+                this,SLOT(acceptPCD(pcl::PointCloud<PointT>, pcl::PointCloud<PointT>)),
+                Qt::DirectConnection);
+    */
+        connect(icp_thread,SIGNAL(send(MyCloudType,MyCloudType )),
+                this,SLOT(acceptPCD(MyCloudType, MyCloudType ) ) );
+        icp_thread->start();
 
     }
 
+}
+
+void PCLViewer::acceptPCD(MyCloudType source, MyCloudType cloud_global)
+{
+    qDebug()<<"get PCD in maste thread";
+    pcl::PointCloud<PointT>::Ptr src_cloud = source.cloud.makeShared();
+    pcl::PointCloud<PointT>::Ptr g_cloud = cloud_global.cloud.makeShared();
+    icpUpdateView(src_cloud, g_cloud);
 }
 
 void PCLViewer::icpUpdateView(pcl::PointCloud<PointT>::Ptr cloud_src, pcl::PointCloud<PointT>::Ptr cloud_global)
@@ -179,11 +170,16 @@ void PCLViewer::reconstruction()
     if(!filename.isEmpty())
     {
         pcl::io::loadPCDFile(filename.toStdString(),*m_cloud);
+
+
+
     }
 
     m_viewer->updatePointCloud(m_cloud,"cloud");
     m_viewer->resetCamera();
     ui->qvtkWidget->update();
+
+
 }
 
 

@@ -14,7 +14,7 @@ add_definitions(${PCL_DEFINITIONS})
 find_package( OpenCV REQUIRED )
 
 #Qt
-find_package( Qt5 REQUIRED Widgets )
+find_package( Qt5 REQUIRED Widgets Core )
 
 #gp
 include_directories(${PROJECT_SOURCE_DIR}/include)

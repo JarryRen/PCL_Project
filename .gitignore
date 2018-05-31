@@ -16,5 +16,6 @@ PCL_Object_Project/build/*
 build/
 3rdParty/
 QT_PCL_Project/bin/qt_pcl_project
+QT_PCL_Project/bin/qt_pcl_project_shell
 QT_PCL_Project/bin/scene_project
 

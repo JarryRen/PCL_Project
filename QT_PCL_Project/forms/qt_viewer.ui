@@ -85,7 +85,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>配置文件</string>
+     <string>test!</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="textBrowser">

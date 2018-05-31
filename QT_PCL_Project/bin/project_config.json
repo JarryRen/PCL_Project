@@ -17,9 +17,11 @@
   },
   "reconsruction":
   {
-  "mls_radius":0.04,
+  "leaf_size":0.004,
+  "mls_radius":0.01,
   "depth":8,
   "solver_divide":6,
-  "iso_divide":6
+  "iso_divide":6,
+  "max_polygon":30
   }
 }

@@ -18,6 +18,7 @@ add_library(QT_PRJ_LIB SHARED
     )
 target_link_libraries(QT_PRJ_LIB
     Qt5::Widgets
+    Qt5::Core
     )
 
 #pcl

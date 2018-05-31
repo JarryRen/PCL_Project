@@ -81,7 +81,6 @@ void gp::reconstruction_test(pcl::PointCloud< gp::PointT >::Ptr cloud)
   pcl::io::saveVTKFile("test_mesh.vtk",mesh);
 
   pcl::visualization::PCLVisualizer viewer("mesh viewer");
-  viewer.setBackgroundColor(127,255,0);
   viewer.addPolygonMesh(mesh,"mesh");
   while (!viewer.wasStopped())
    {
