@@ -6,6 +6,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
   ui (new Ui::PCLViewer)
 {
   ui->setupUi (this);
+  view_not_busy = true;
   this->setWindowTitle ("PCL viewer");
 
   //类型注册 用于子线程
@@ -16,14 +17,10 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
   connect(ui->action_open_PCD,SIGNAL(triggered(bool)),this,SLOT(openPCD()));
   connect(ui->pushButton_recon,SIGNAL(clicked(bool)),this,SLOT(reconstruction()));
-
   //image_to_pcd
   connect(ui->pushButton_imageToPCD,SIGNAL(clicked(bool)), this, SLOT(imageToPCD()));
     //icp
   connect(ui->pushButton_icp,SIGNAL(clicked(bool)), this, SLOT(icpRegistration()));
-
-
-  connect(ui->pushButton,SIGNAL(clicked(bool)), this ,SLOT(test()));
 
 }
 
@@ -42,44 +39,24 @@ void PCLViewer::initWidgetViewer()
 
 }
 
-void PCLViewer::test()
-{
-    /*
-    QtICPThread *t1 = new QtICPThread() ;
-    QtICPThread *t2 = new QtICPThread();
-
-    connect(t1, SIGNAL(finished() ),t1,SLOT(stop() ));
-    connect(t2, SIGNAL(finished() ), t2,SLOT(stop() ));
-
-    t1->start();
-    t2->start();
-    */
-}
-
-
-
-
 void PCLViewer::openPCD()
 {
-    QString filename = QFileDialog::getOpenFileName(
-                this,tr("Open PointClud."),".",tr("Open PCD file(*.pcd)"));
-    QStringList filenames = QFileDialog::getOpenFileNames(
-                this,tr("Open PCD list."),".",tr("Open PCD files(*.pcd)"));
-
-    QStringList::const_iterator itr;
-    for(itr = filenames.constBegin();itr!=filenames.constEnd();itr++)
+    if(view_not_busy)
     {
-        std::string tmp;
-        std::cout << (*itr).toLocal8Bit().constData() <<std::endl;
-    }
+        QString filename = QFileDialog::getOpenFileName(
+                    this,tr("Open PointClud."),".",tr("Open PCD file(*.pcd)"));
+        if(!filename.isEmpty())
+        {
+            ui->textBrowser->append("打开文件:"+filename);
+            pcl::io::loadPCDFile(filename.toStdString(),*m_cloud);
 
-    if(!filename.isEmpty())
-    {
-        pcl::io::loadPCDFile(filename.toStdString(),*m_cloud);
-    }
-    m_viewer->updatePointCloud(m_cloud,"cloud");
-    m_viewer->resetCamera();
-    ui->qvtkWidget->update();
+            m_viewer->removeAllPointClouds();
+            m_viewer->addPointCloud(m_cloud,"cloud");
+            m_viewer->resetCamera();
+            ui->qvtkWidget->update();
+        }
+    }else
+        ui->textBrowser->append("正在忙...");
 }
 
 void PCLViewer::imageToPCD(){
@@ -118,6 +95,7 @@ void PCLViewer::icpRegistration()
                 this,tr("选取待配准的点云数据集."),".",tr("PCD点云文件(*.pcd)"));
     if( !pcd_filenames.isEmpty() )
     {
+        ui->textBrowser->append("开始点云配准.");
         m_viewer->removePointCloud("source_cloud");
         m_viewer->removePointCloud("global_cloud");
         m_viewer->removePointCloud("cloud");
@@ -143,6 +121,7 @@ void PCLViewer::icpRegistration()
 
 void PCLViewer::acceptPCD(MyCloudType source, MyCloudType cloud_global)
 {
+    ui->textBrowser->append("接收点云,更新视图...");
     qDebug()<<"get PCD in maste thread";
     pcl::PointCloud<PointT>::Ptr src_cloud = source.cloud.makeShared();
     pcl::PointCloud<PointT>::Ptr g_cloud = cloud_global.cloud.makeShared();
@@ -169,19 +148,17 @@ void PCLViewer::reconstruction()
                 this,tr("选取PCD文件."),".",tr("打开文件(*.pcd)"));
     if(!filename.isEmpty())
     {
-        pcl::io::loadPCDFile(filename.toStdString(),*m_cloud);
-
-
+        QtReconThread *recon_thread = new QtReconThread(filename);
+        connect(recon_thread, SIGNAL(finished()), recon_thread, SLOT(stop() ));
+        recon_thread->start();
 
     }
-
-    m_viewer->updatePointCloud(m_cloud,"cloud");
-    m_viewer->resetCamera();
-    ui->qvtkWidget->update();
-
-
 }
 
+void PCLViewer::stopRecon(QtReconThread *qrt)
+{
+    qrt->quit();
+}
 
 
 PCLViewer::~PCLViewer ()

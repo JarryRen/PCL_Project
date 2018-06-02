@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QMetaType>
+#include <QVTKWidget.h>
 //pcl
 #include <pcl/visualization/pcl_visualizer.h>
 //VTK
@@ -17,6 +18,7 @@
 #include "pcl_project/reconstruction.h"
 
 #include "qt_project/qt_icp.h"
+#include "qt_project/qt_recon.h"
 #include "qt_project/qt_thread_type.h"
 namespace Ui
 {
@@ -33,8 +35,6 @@ public:
   ~PCLViewer ();
 
 public slots:
-    void test();
-
 
     void openPCD();
 
@@ -58,6 +58,8 @@ public slots:
     */
     void reconstruction();
 
+    void stopRecon(QtReconThread *qrt);
+
 protected:
   boost::shared_ptr<pcl::visualization::PCLVisualizer> m_viewer;
   pcl::PointCloud<PointT>::Ptr m_cloud;
@@ -66,6 +68,7 @@ protected:
 
 private:
   Ui::PCLViewer *ui;
+  bool view_not_busy;
 
 };
 
