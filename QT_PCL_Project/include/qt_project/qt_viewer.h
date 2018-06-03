@@ -17,6 +17,7 @@
 #include "pcl_project/registration.h"
 #include "pcl_project/reconstruction.h"
 
+#include "qt_project/qt_dataprocess.h"
 #include "qt_project/qt_icp.h"
 #include "qt_project/qt_recon.h"
 #include "qt_project/qt_thread_type.h"
@@ -48,17 +49,21 @@ public slots:
     * @param[in]
     */
     void icpRegistration();
-
-    void icpUpdateView(pcl::PointCloud<PointT>::Ptr cloud_src, pcl::PointCloud<PointT>::Ptr cloud_global);
-
+    /**
+     * @brief acceptPCD 接收来自子线程的文件
+     * @param source
+     * @param cloud_global
+     */
     void acceptPCD(MyCloudType source, MyCloudType cloud_global);
-
+    void saveRegPCD();
     /**
     * @brief reconstruction
     */
     void reconstruction();
 
-    void stopRecon(QtReconThread *qrt);
+    void saveMesh(MyCloudType mesh);
+
+    void threadStop();
 
 protected:
   boost::shared_ptr<pcl::visualization::PCLVisualizer> m_viewer;

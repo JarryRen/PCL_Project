@@ -28,8 +28,8 @@ class QtReconThread : public QThread
 public:
     explicit QtReconThread( QString accept_file, QObject *parent = 0 );
 
-public slots:
-    void stop();
+signals:
+    void send(MyCloudType my_mesh);
 
 private:
     QString filename;

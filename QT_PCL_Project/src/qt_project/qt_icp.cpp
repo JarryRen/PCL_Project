@@ -10,7 +10,6 @@ QtICPThread::QtICPThread(QStringList accept_files, QObject *parent ) :
 
 void QtICPThread::run()
 {
-    qDebug()<<"配准开始！ ";
     gp::registration reg;
     Eigen::Matrix4f global_transform = Eigen::Matrix4f::Identity();
     Eigen::Matrix4f icp_trans;
@@ -45,14 +44,9 @@ void QtICPThread::run()
         emit send(send_source,send_global);
        // emit send(*source, *global_aligned_cloud);//send to master thread
 
-        qDebug()<<"配准传送";
+        qDebug()<<"传送当前配准点云";
 
         *target = *source;  //更新目标点云
     }
 
-}
-
-void QtICPThread::stop()
-{
-    qDebug()<<"over";
 }

@@ -4,7 +4,8 @@ QtReconThread::QtReconThread( QString accept_file, QObject *parent ) :
     QThread( parent )
 {
     this->filename = accept_file;
-    qDebug()<<"模型重建。";
+    qRegisterMetaType< pcl::PointCloud<PointT> >("MyPointType");
+    qDebug()<<"模型重建子线程";
 }
 
 void QtReconThread::run()
@@ -48,10 +49,10 @@ void QtReconThread::run()
     renderer->Delete();
     actor->Delete();
     mapper->Delete();
+
+    //传送模型
+    MyCloudType my_mesh;
+    my_mesh.mesh = mesh;
+    emit send(my_mesh);
 }
 
-void QtReconThread::stop()
-{
-    this->quit();
-    qDebug()<< "over";
-}

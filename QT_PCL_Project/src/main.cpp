@@ -2,10 +2,8 @@
 //qt
 #include <QApplication>
 #include <QMainWindow>
-#include <qt_project/mainwindow.h>
 //gp
 #include "pcl_project/pcl_control.h"
-
 #include <qt_project/qt_viewer.h>
 
 int main(int argc, char **argv) {

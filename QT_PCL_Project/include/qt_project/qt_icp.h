@@ -20,7 +20,7 @@ public:
 
 signals:
     /**
-     * @brief sendPCD copy pcds
+     * @brief sendPCD copy pcds 传输文件到界面
      * @param source
      */
     void send(MyCloudType source,MyCloudType  cloud_global);
@@ -28,9 +28,5 @@ signals:
 private:
     QStringList filenames;
     void run();
-
-
-private slots:
-    void stop();
 };
 
