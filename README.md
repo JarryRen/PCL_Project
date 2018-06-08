@@ -6,7 +6,7 @@
 * OpenCV 3.4.1
 * CMake 3.11.1
 * Qt Creator 4.5.1
-* RapidJSON
+* RapidJSON 1.1.0
 * Kinect for Xbox 360
 
 ## Thanks
