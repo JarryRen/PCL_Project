@@ -4,23 +4,22 @@
 #include <iostream>
 //qt
 #include <QMainWindow>
+#include <QDebug>
+#include <QString>
 #include <QFileDialog>
 #include <QMetaType>
 #include <QVTKWidget.h>
 //pcl
 #include <pcl/visualization/pcl_visualizer.h>
-//VTK
-#include <vtkRenderWindow.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/io/vtk_io.h>
 //gp
-#include "pcl_project/loadfile.h"
-#include "pcl_project/data_processing.h"
-#include "pcl_project/registration.h"
-#include "pcl_project/reconstruction.h"
-
+#include "qt_project/qt_kinectdata.h"
 #include "qt_project/qt_dataprocess.h"
 #include "qt_project/qt_icp.h"
 #include "qt_project/qt_recon.h"
 #include "qt_project/qt_thread_type.h"
+
 namespace Ui
 {
   class PCLViewer;
@@ -28,8 +27,8 @@ namespace Ui
 
 class PCLViewer : public QMainWindow
 {
+    Q_OBJECT
     typedef pcl::PointXYZRGB PointT;
-  Q_OBJECT
 
 public:
   explicit PCLViewer (QWidget *parent = 0);
@@ -38,6 +37,11 @@ public:
 public slots:
 
     void openPCD();
+
+    /**
+     * @brief getKinectData
+     */
+    void getKinectData();
 
     /**
     * @brief image_to_pcd
@@ -55,20 +59,28 @@ public slots:
      * @param cloud_global
      */
     void acceptPCD(MyCloudType source, MyCloudType cloud_global);
+    /**
+     * @brief saveRegPCD
+     */
     void saveRegPCD();
+
     /**
     * @brief reconstruction
     */
     void reconstruction();
-
+    /**
+     * @brief saveMesh
+     * @param mesh
+     */
     void saveMesh(MyCloudType mesh);
-
-    void threadStop();
 
 protected:
   boost::shared_ptr<pcl::visualization::PCLVisualizer> m_viewer;
   pcl::PointCloud<PointT>::Ptr m_cloud;
 
+  /**
+   * @brief initWidgetViewer chushih
+   */
   void initWidgetViewer();
 
 private:

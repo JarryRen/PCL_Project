@@ -7,6 +7,7 @@
 * CMake 3.11.1
 * Qt Creator 4.5.1
 * RapidJSON
+* Kinect for Xbox 360
 
 ## Thanks
 RGB-D Object Dataset

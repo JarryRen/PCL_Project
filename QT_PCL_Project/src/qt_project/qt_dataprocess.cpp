@@ -11,8 +11,6 @@ QtDataProcess::QtDataProcess( QStringList list, QString path, QObject *parent ) 
 void QtDataProcess::run()
 {
     cv::Mat rgb,depth;
-    pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>);
-    pcl::PointCloud<PointT>::Ptr cloud_processed(new pcl::PointCloud<PointT>);
     gp::DataProcessing dp;
 
     QStringList::const_iterator itr;
@@ -24,6 +22,8 @@ void QtDataProcess::run()
         depth = cv::imread( (*itr).toLocal8Bit().constData(), -1 );//onlyread
         itr++;
 
+        pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>);
+        pcl::PointCloud<PointT>::Ptr cloud_processed(new pcl::PointCloud<PointT>);
         dp.imageToPCD(rgb, depth, cloud);
         dp.dataProcess(cloud, cloud_processed);
 

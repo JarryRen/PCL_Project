@@ -65,13 +65,13 @@ void gp::DataProcessing::dataProcess(pcl::PointCloud<PointT>::Ptr cloud, pcl::Po
     pcl::PointCloud<PointT>::Ptr cloud_sor_filtered(new pcl::PointCloud<PointT>);
     pcl::StatisticalOutlierRemoval<PointT> sor;
     sor.setInputCloud(cloud_no_plane);
-    sor.setMeanK(3000);
+    sor.setMeanK(5000);
     sor.setStddevMulThresh(1.0);
     sor.filter(*cloud_sor_filtered);
 
     pcl::RadiusOutlierRemoval<PointT> ror;
     ror.setInputCloud(cloud_sor_filtered);
     ror.setRadiusSearch(0.1);
-    ror.setMinNeighborsInRadius(200);
+    ror.setMinNeighborsInRadius(150);
     ror.filter(*cloud_processed);
 }

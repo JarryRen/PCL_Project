@@ -42,11 +42,18 @@ void gp::reconsruction::movingLeastSquares(pcl::PointCloud< PointT >::Ptr cloud,
     grid.setInputCloud(cloud);
     grid.filter(*cloud_grid);
 
+    pcl::PointCloud<PointT>::Ptr cloud_sor_filtered(new pcl::PointCloud<PointT>);
+    pcl::StatisticalOutlierRemoval<PointT> sor;
+    sor.setInputCloud(cloud_grid);
+    sor.setMeanK(50);
+    sor.setStddevMulThresh(1.0);
+    sor.filter(*cloud_sor_filtered);
+
     pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
-    tree->setInputCloud(cloud_grid);
+    tree->setInputCloud(cloud_sor_filtered);
 
     pcl::MovingLeastSquares<pcl::PointXYZRGB,pcl::PointXYZRGB> mls;
-    mls.setInputCloud(cloud_grid);
+    mls.setInputCloud(cloud_sor_filtered);
     mls.setComputeNormals(true);
     mls.setPolynomialFit(true);//启用多项式你拟合
     mls.setPolynomialOrder(2);//3 拟合阶数

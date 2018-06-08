@@ -15,6 +15,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
   initWidgetViewer();
 
   connect(ui->action_open_PCD,SIGNAL(triggered(bool)),this,SLOT(openPCD()));
+  connect(ui->pushButton_getKinectData, SIGNAL(clicked(bool)), this, SLOT(getKinectData()));
   connect(ui->pushButton_imageToPCD,SIGNAL(clicked(bool)), this, SLOT(imageToPCD()));
   connect(ui->pushButton_icp,SIGNAL(clicked(bool)), this, SLOT(icpRegistration()));
   connect(ui->pushButton_recon,SIGNAL(clicked(bool)),this,SLOT(reconstruction()));
@@ -56,6 +57,107 @@ void PCLViewer::openPCD()
         ui->textBrowser->append("正在忙...");
 }
 
+void PCLViewer::getKinectData()
+{
+    QString save_path = QFileDialog::getSaveFileName(
+                this,tr("保存PNG文件."),".",tr("PNG图像文件(*.png)"));
+    if( !save_path.isNull() )
+    {
+        //QtKinect *kinect_thread = new QtKinect(save_path);
+        //kinect_thread->start();
+
+        ui->textBrowser->append("按q退出,按s保存.");
+        QStringList  path_split = save_path.split("/");
+        QString ui_info = path_split.at(path_split.size()-1);
+        save_path = save_path.split(".").at(0);
+
+        //https://kheresy.wordpress.com/2012/07/25/openni-and-opencv/
+        //初始化OpenNI环境
+        XnStatus result = XN_STATUS_OK;
+        xn::Context xn_context;
+        if(result != xn_context.Init())
+        {
+            ui->textBrowser->append("初始化失败,设备或许未连接.");
+        }else
+        {
+            xn::ImageGenerator img_generator;
+            xn::DepthGenerator depth_generator;
+            img_generator.Create(xn_context);
+            depth_generator.Create(xn_context);
+            //设置获取大小
+            XnMapOutputMode map_mode_img;
+            map_mode_img.nXRes = 640;
+            map_mode_img.nYRes = 480;
+            map_mode_img.nFPS = 30;
+            img_generator.SetMapOutputMode(map_mode_img);
+            depth_generator.SetMapOutputMode( map_mode_img );
+
+            //设置视点
+            depth_generator.GetAlternativeViewPointCap().SetViewPoint(img_generator);
+
+            //元数据
+            xn::ImageMetaData rgb_MD;
+            xn::DepthMetaData depth_MD;
+
+            cv::namedWindow("RGB Image",1);
+            cv::namedWindow("Depth Image",1);
+
+            cv::namedWindow("test",1);
+
+            xn_context.StartGeneratingAll();
+            xn_context.WaitAndUpdateAll();
+
+            int i = 0;
+            char key = 0;//null
+            while( key != 'q' )//esc
+            {
+                xn_context.WaitAndUpdateAll();
+                img_generator.GetMetaData(rgb_MD);
+                depth_generator.GetMetaData(depth_MD);
+
+                cv::Mat rgb_img(rgb_MD.FullYRes(), rgb_MD.FullXRes(), CV_8UC3, (void*)rgb_MD.Data());
+                cv::Mat bgr_img_show;
+                cv::cvtColor(rgb_img, bgr_img_show, CV_RGB2BGR);
+
+                cv::Mat img_down;
+                cv::pyrDown(bgr_img_show,img_down,cv::Size(bgr_img_show.cols/2,bgr_img_show.rows/2));
+
+                cv::imshow("RGB Image",bgr_img_show);
+                cv::imshow("test",img_down);
+
+                cv::Mat depth_img(depth_MD.FullYRes(), depth_MD.FullXRes(), CV_16UC1, (void*)depth_MD.Data());
+                cv::Mat depth_img_show;
+                depth_img.convertTo(depth_img_show, CV_8U,255.0/7000);
+                cv::imshow("Depth Image",depth_img_show);
+
+                key=cvWaitKey(20);
+
+                switch ( key ) {
+                case 's':
+                {
+                    std::stringstream ss_rgb;
+                    ss_rgb<<save_path.toStdString()<<"_"<<i<<".png";
+                    cv::imwrite(ss_rgb.str(),bgr_img_show);
+                    std::stringstream ss_depth;
+                    ss_depth<<save_path.toStdString()<<"_"<<i++<<"_depth.png";
+                    cv::imwrite(ss_depth.str(),depth_img);
+
+                    QString save_info = "已保存" + ui_info + "_" + (i-1) + ".png";
+                    ui->textBrowser->append(save_info);
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            cvDestroyWindow("RGB Image");
+            cvDestroyWindow("Depth Image");
+            xn_context.StopGeneratingAll();
+            xn_context.Release();
+        }
+    }
+}
+
 void PCLViewer::imageToPCD(){
     QStringList png_filenames = QFileDialog::getOpenFileNames(
                 this,tr("选取图像转点云的RGB和深度图像."),".",tr("PNG图像文件(*.png)"));
@@ -75,11 +177,12 @@ void PCLViewer::icpRegistration()
 {
     if(view_not_busy)
     {
-        view_not_busy = false;
         QStringList pcd_filenames = QFileDialog::getOpenFileNames(
                     this,tr("选取待配准的点云数据集."),".",tr("PCD点云文件(*.pcd)"));
         if( !pcd_filenames.isEmpty() )
         {
+            view_not_busy = false;
+
             ui->textBrowser->append("开始点云配准.");
             m_viewer->removePointCloud("source_cloud");
             m_viewer->removePointCloud("global_cloud");
@@ -91,11 +194,9 @@ void PCLViewer::icpRegistration()
             ui->qvtkWidget->update();
 
             QtICPThread *icp_thread = new QtICPThread(pcd_filenames);
-    /*直接连接，不够稳定，相当于在子线程直接执行，不安全。
-            connect(icpthread,SIGNAL(send(pcl::PointCloud<PointT>,pcl::PointCloud<PointT>)),
-                    this,SLOT(acceptPCD(pcl::PointCloud<PointT>, pcl::PointCloud<PointT>)),
-                    Qt::DirectConnection);
-        */
+            //直接连接，不够稳定，相当于在子线程直接执行，不安全。
+           // connect(icpthread,SIGNAL(send(pcl::PointCloud<PointT>,pcl::PointCloud<PointT>)),this,SLOT(acceptPCD(pcl::PointCloud<PointT>, pcl::PointCloud<PointT>)), Qt::DirectConnection);
+
             connect(icp_thread,SIGNAL(send(MyCloudType,MyCloudType )),
                     this,SLOT(acceptPCD(MyCloudType, MyCloudType ) ) );
             connect(icp_thread, SIGNAL(finished() ), this, SLOT( saveRegPCD()));
@@ -144,11 +245,12 @@ void PCLViewer::reconstruction()
 {
     if(view_not_busy)
     {
-        view_not_busy=false;
         QString filename = QFileDialog::getOpenFileName(
                     this,tr("选取PCD文件."),".",tr("打开文件(*.pcd)"));
         if(!filename.isEmpty())
         {
+            view_not_busy=false;
+
             QStringList true_name = filename.split("/");
             ui->textBrowser->append("开始对"+true_name.at(true_name.size()-1)+"模型重建.");
             pcl::io::loadPCDFile(filename.toStdString(),*m_cloud);
@@ -173,19 +275,13 @@ void PCLViewer::saveMesh(MyCloudType mesh)
     if(!save_filename.isNull())
     {
         std::stringstream ss;
-        ss<< save_filename.split(".").at(0).toStdString() << ".vtk" ;
+        ss<< save_filename.split(".").at(0).toStdString() << ".vtk";
         pcl::io::saveVTKFile(ss.str(), mesh.mesh);
     }else
         ui->textBrowser->append("未保存模型！");
 
     view_not_busy = true;
     ui->textBrowser->append("当前模型重建流程已完成.");
-}
-
-void PCLViewer::threadStop()
-{
-    view_not_busy = true;
-    ui->textBrowser->append("当前流程已完成.");
 }
 
 PCLViewer::~PCLViewer ()
